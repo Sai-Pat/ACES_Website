@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACES Team - Engineering the Future</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(0, 191, 255, 0.1) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .matrix-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+
+
+
+
+        /* Hero Section */
+        .hero {
+
+   /* or a specific width if needed */
+
+    background-image: url('committee.jpg');
+    background-position: center;
+    
+    background-size: cover; /* or 'contain', depending on your desired effect */
+
+    text-align: center;
+    position: relative;
+    padding:250px;
+    
+
+
+        }
+
+        .hero-content {
+           
+            
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            
+            background: linear-gradient(45deg, #00ffff, #8a2be2, #00bfff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+           
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+.cta-button {
+    display: block;
+    padding: 15px;
+    background: linear-gradient(45deg, #00ffff, #8a2be2);
+    border: none;
+    border-radius: 30px;
+    color: #0a0a0a;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+    margin: 0 auto; /* Center horizontally */
+    overflow: hidden;
+    margin-bottom: 30px;
+    width: fit-content; /* Prevent full-width stretch */
+}
+
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.5);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Section Styling */
+        .section {
+            padding: 80px 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(45deg, #00ffff, #8a2be2);
+            border-radius: 2px;
+        }
+
+        /* Team Cards */
+        .team-grid {
+            display: grid;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .hero-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(138, 43, 226, 0.1));
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+
+        .hero-member::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            animation: rotate 8s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .member-card {
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .member-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+
+        .member-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .member-card:hover::before {
+            left: 100%;
+        }
+
+        .member-photo {
+            width: 200px;
+            height: 250px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(45deg, #00ffff, #8a2be2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0a0a0a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-member .member-photo {
+            width: 250px;
+            height: 250px;
+            font-size: 2.5rem;
+        }
+
+        .member-photo::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00ffff, #8a2be2, #00bfff);
+            z-index: -1;
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .member-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #00ffff;
+        }
+
+        .hero-member .member-name {
+            font-size: 1.8rem;
+        }
+
+        .member-role {
+            color: #8a2be2;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .member-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: linear-gradient(45deg, rgba(0, 255, 255, 0.2), rgba(138, 43, 226, 0.2));
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        /* Grid Layouts */
+        .leadership-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .executive-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .team-section {
+            margin-bottom: 4rem;
+        }
+
+        .team-section h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #00bfff;
+        }
+
+        .team-members {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+
+        .special-highlight {
+            position: relative;
+        }
+
+        .special-highlight::after {
+            content: '⚡';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            animation: spark 2s ease-in-out infinite;
+        }
+
+        @keyframes spark {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(10, 10, 10, 0.95);
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .footer-quote {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #00ffff, #8a2be2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-info {
+            opacity: 0.7;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1rem;
+            }
+
+            .hero {
+                padding: 1rem;
+                min-height: 90vh;
+            }
+
+            .section {
+                padding: 60px 1rem;
+            }
+
+            .leadership-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .executive-row {
+                grid-template-columns: 1fr;
+            }
+
+            .team-members {
+                grid-template-columns: 1fr;
+            }
+
+            .member-card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Animation on scroll */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+    </style>
+</head>
+<body>
+
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1></h1>
+            <p></p>
+            
+        </div>
+    </section>
+
+    <section id="team" class="section">
+        <a href="#team" class="cta-button">Explore the Team</a>
+        <h2 class="section-title fade-in">Leadership Hierarchy</h2>
+        
+        <!-- President & HOD -->
+        <div class="hero-member fade-in">
+            <div class="member-photo"><img src="https://via.placeholder.com/150" alt="Dr. S.K. Sonkar"></div>
+            <h3 class="member-name">Dr. S.K. Sonkar</h3>
+            <p class="member-role">Head of Department</p>
+            <span class="member-badge">President</span>
+        </div>
+
+        <!-- ACES Coordinator -->
+        <div class="hero-member fade-in">
+            <div class="member-photo"><img src="https://via.placeholder.com/150" alt="Dr. G.D. Puri"></div>
+            <h3 class="member-name">Dr. G.D. Puri</h3>
+            <p class="member-role">Vice Head of Department</p>
+            <span class="member-badge">Faculty Coordinator</span>
+        </div>
+
+        <!-- Core Leadership -->
+        <div class="fade-in">
+            <!-- Vice President and Secretary in one row -->
+             <div class="hero-member fade-in">
+            <div class="member-photo"><img src="shantanu.jpg" alt="Shantanu Wagh"></div>
+            <h3 class="member-name">Shantanu Wagh</h3>
+            
+            <span class="member-badge">Vice President</span>
+        </div>
+            <!-- Treasurers in one row -->
+            <div class="executive-row">
+                <div class="member-card">
+                    <div class="member-photo"><img src="krushna.jpg" alt="Krushna Pokale"></div>
+                    <h3 class="member-name">Krushna Pokale</h3>
+                    <p class="member-role">Treasurer</p>
+                    <span class="member-badge">Executive</span>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="dyanesh.jpg" alt="Dyanesh Sonwane"></div>
+                    <h3 class="member-name">Dyanesh Sonwane</h3>
+                    <p class="member-role">Treasurer</p>
+                    <span class="member-badge">Executive</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Coordinators -->
+        <div class="team-section fade-in">
+            <h3>📌 Student Coordinators</h3>
+            <div class="team-members">
+                <div class="member-card">
+                    <div class="member-photo"><img src="ajinkya.jpg" alt="Ajinkya Sonwane"></div>
+                    <h3 class="member-name">Ajinkya Sonwane</h3>
+                    <p class="member-role">Student Coordinator</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="pranita.jpg" alt="Pranita Deshmukh"></div>
+                    <h3 class="member-name">Pranita Deshmukh</h3>
+                    <p class="member-role">Student Coordinator</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Team -->
+        <div class="team-section fade-in">
+            <h3>💻 Technical Team</h3>
+            <div class="team-members">
+                <div class="member-card special-highlight">
+                    <div class="member-photo"><img src="chaitanya.png" alt="Chaitanya Patil"></div>
+                    <h3 class="member-name">Chaitanya Patil</h3>
+                   
+                    <span class="member-badge">Technical Team Lead</span>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="kunalp.jpg" alt="Kunal Pawar"></div>
+                    <h3 class="member-name">Kunal Pawar</h3>
+                    <p class="member-role">Technical Member</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="Gayatri.png" alt="Gayatri Nawale"></div>
+                    <h3 class="member-name">Gayatri Nawale</h3>
+                    <p class="member-role">Technical Member</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="vedant.jpg" alt="Vedant Tajane"></div>
+                    <h3 class="member-name">Vedant Tajane</h3>
+                    <p class="member-role">Technical Member</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="Sakshi_Laware.jpg" alt="Sakshi Laware"></div>
+                    <h3 class="member-name">Sakshi Laware</h3>
+                    <p class="member-role">Technical Member</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sports Committee -->
+        <div class="team-section fade-in">
+            <h3>🏆 Sports Committee</h3>
+            <div class="team-members">
+                <div class="member-card">
+                    <div class="member-photo"><img src="akshad.jpg" alt="Akshad Ambekar"></div>
+                    <h3 class="member-name">Akshad Ambekar</h3>
+                    <p class="member-role">Sports Coordinator</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="arpita.jpg" alt="Arpita Ragir"></div>
+                    <h3 class="member-name">Arpita Ragir</h3>
+                    <p class="member-role">Sports Coordinator</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cultural Committee -->
+        <div class="team-section fade-in">
+            <h3>🎭 Cultural Committee</h3>
+            <div class="team-members">
+                <div class="member-card">
+                    <div class="member-photo"><img src="ritesh.jpg" alt="Ritesh Shelke"></div>
+                    <h3 class="member-name">Ritesh Shelke</h3>
+                    <p class="member-role">Cultural Coordinator</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="chhaya.jpg" alt="Nawale Chhaya"></div>
+                    <h3 class="member-name">Nawale Chhaya</h3>
+                    <p class="member-role">Cultural Coordinator</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discipline Committee -->
+        <div class="team-section fade-in">
+            <h3>🔒 Discipline Committee</h3>
+            <div class="team-members">
+                <div class="member-card">
+                    <div class="member-photo"><img src="dhanraj.jpg" alt="Dhanraj Kadam"></div>
+                    <h3 class="member-name">Dhanraj Kadam</h3>
+                    <p class="member-role">Discipline Coordinator</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="sonali.jpg" alt="Sonali Jadhav"></div>
+                    <h3 class="member-name">Sonali Jadhav</h3>
+                    <p class="member-role">Discipline Coordinator</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="prajwal.jpg" alt="Prajwal Godase"></div>
+                    <h3 class="member-name">Prajwal Godase</h3>
+                    <p class="member-role">Discipline Coordinator</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="mayur.jpg" alt="Prajwal Godase"></div>
+                    <h3 class="member-name">Mayur Ranmale</h3>
+                    <p class="member-role">Discipline Coordinator</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Anchoring Team -->
+        <div class="team-section fade-in">
+            <h3>🎤 Anchoring Team</h3>
+            <div class="team-members">
+                <div class="member-card">
+                    <div class="member-photo"><img src="sharda.jpg" alt="Sharda Chalse"></div>
+                    <h3 class="member-name">Sharda Chalse</h3>
+                    <p class="member-role">Anchor</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="Priya_Kutal.jpg" alt="Priya Kutal"></div>
+                    <h3 class="member-name">Priya Kutal</h3>
+                    <p class="member-role">Anchor</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decoration Team -->
+        <div class="team-section fade-in">
+            <h3>🎨 Decoration Team</h3>
+            <div class="team-members">
+                <div class="member-card">
+                    <div class="member-photo"><img src="Shreya_Kadtan.jpg" alt="Shreya Kadtan"></div>
+                    <h3 class="member-name">Shreya Kadtan</h3>
+                    <p class="member-role">Decoration Coordinator</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="Vaishnavi_Karpe.jpg" alt="Vaishnavi Karpe"></div>
+                    <h3 class="member-name">Vaishnavi Karpe</h3>
+                    <p class="member-role">Decoration Coordinator</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Social Media -->
+        <div class="team-section fade-in">
+            <h3>📱 Social Media</h3>
+            <div class="team-members">
+                <div class="member-card">
+                    <div class="member-photo"><img src="sharad.jpg" alt="Sharad Shelke"></div>
+                    <h3 class="member-name">Sharad Shelke</h3>
+                    <p class="member-role">Social Media Manager</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-photo"><img src="jay.jpg" alt="Jay Kale"></div>
+                    <h3 class="member-name">Jay Kale</h3>
+                    <p class="member-role">Social Media Manager</p>
+                </div>
+            </div>
+            <div class="member-card">
+                    <div class="member-photo"><img src="aaditya.jpg" alt="Aditya Joshi"></div>
+                    <h3 class="member-name">Aditya Joshi</h3>
+                    <p class="member-role">Secretary</p>
+                    <span class="member-badge">Executive</span>
+                </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-quote">
+            "Leadership, Innovation, Unity — The ACES Legacy Continues."
+        </div>
+        <div class="footer-info">
+            Association of Computer Engineering Students<br>
+            Department of Computer Engineering<br>
+            Amrutvahini College of Engineering, Sangamner, Maharashtra – 422608
+        </div>
+        <div class="footer-info">
+            Copyright © 2025 ACES | All Rights Reserved
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for CTA button
+        document.querySelector('.cta-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('#team').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add hover sound effect (visual feedback)
+        document.querySelectorAll('.member-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Dynamic grid adjustment
+        function adjustGrid() {
+            const cards = document.querySelectorAll('.member-card');
+            cards.forEach(card => {
+                if (window.innerWidth < 768) {
+                    card.style.margin = '0 auto 1rem';
+                    card.style.maxWidth = '300px';
+                } else {
+                    card.style.margin = '';
+                    card.style.maxWidth = '';
+                }
+            });
+        }
+
+        window.addEventListener('resize', adjustGrid);
+        adjustGrid(); // Call on initial load
+    </script>
+</body>
+</html>
