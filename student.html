@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <!-- Firebase Core SDK -->
+<!-- Firebase compat SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+
+<!-- Your Firebase config -->
+<script src="firebase-config.js"></script>
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Particle Background */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffd700;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 1; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.5; }
+        }
+
+        /* Glassmorphism Base */
+        .glass {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            padding: 24px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 32px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin: 8px 0;
+            color: rgba(255, 215, 0, 0.8);
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            transform: translateX(4px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .nav-icon {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: calc(100% - 300px);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        /* Student Summary */
+        .student-summary {
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .student-info h2 {
+            color: #ffd700;
+            font-size: 28px;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .student-details {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .detail-item {
+            color: rgba(255, 215, 0, 0.8);
+            font-size: 14px;
+        }
+
+        .detail-item strong {
+            color: #ffd700;
+        }
+
+        .class-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 8px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .toggle-option {
+            padding: 8px 16px;
+            border-radius: 16px;
+            color: rgba(255, 215, 0, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .toggle-option.active {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a1a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+            background: linear-gradient(135deg, #ffed4e, #ffd700);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: #ffd700;
+            font-size: 32px;
+            margin-bottom: 24px;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Event Cards */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .event-card {
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+
+        .event-poster {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a1a1a;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .event-title {
+            color: #ffd700;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .event-date {
+            color: rgba(255, 215, 0, 0.7);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .event-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .apply-btn {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a1a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+            background: linear-gradient(135deg, #ffed4e, #ffd700);
+        }
+
+        .apply-btn.applied {
+            background: linear-gradient(135deg, #28a745, #34ce57);
+            color: white;
+            cursor: default;
+        }
+
+        .apply-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Applications List */
+        .applications-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .application-item {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .application-info h3 {
+            color: #ffd700;
+            margin-bottom: 4px;
+        }
+
+        .application-status {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .status-approved {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+
+        .status-rejected {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a1a;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            color: #ffd700;
+            padding: 16px;
+            font-weight: 600;
+        }
+
+        /* Event Detail Modal */
+        .event-detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .event-detail-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a1a;
+            border-radius: 8px;
+            font-weight: 600;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+                padding: 16px;
+            }
+
+            .main-content {
+                max-width: 100%;
+            }
+
+            .student-summary {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: center;
+            }
+
+            .student-details {
+                justify-content: center;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .modal-content {
+                margin: 20px;
+                max-height: 90vh;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-container {
+                padding: 5px;
+            }
+
+            .student-summary, .event-card, .application-item {
+                padding: 16px;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+        /* Container for each event */
+.event-card {
+  background-color: #1a1a1a; /* Dark background */
+  border: 2px solid #FFD700; /* Yellow border */
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px auto;
+  padding: 16px;
+  color: white;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3); /* Yellow glow */
+  transition: transform 0.2s ease-in-out;
+}
+
+.event-card:hover {
+  transform: scale(1.02);
+}
+
+/* Event image */
+.event-img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+/* Title and description */
+.event-title {
+  font-size: 1.5em;
+  color: #FFD700;
+  margin-bottom: 8px;
+}
+
+.event-description {
+  color: #e0e0e0;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+/* Apply button */
+.event-apply-btn {
+  padding: 10px 20px;
+  background-color: #FFD700;
+  color: #1a1a1a;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.event-apply-btn:hover {
+  background-color: #e6c200;
+}
+
+/* Applied button (disabled state) */
+.event-apply-btn:disabled {
+  background-color: #555;
+  color: #aaa;
+  cursor: not-allowed;
+  border: 1px dashed #FFD700;
+}
+.applied-event-card {
+  background: #111;
+  border: 1px solid #fdd835;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+
+    </style>
+</head>
+<body>
+    <div id="particles"></div>
+    
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar glass">
+            <div class="logo">🎓 EduPortal</div>
+            <div class="nav-item active" data-section="dashboard">
+                <span class="nav-icon">📊</span>
+                Dashboard
+            </div>
+            <div class="nav-item" data-section="events">
+                <span class="nav-icon">🎉</span>
+                Live Events
+            </div>
+            <div class="nav-item" data-section="applications">
+                <span class="nav-icon">📝</span>
+                My Applications
+            </div>
+            <div class="nav-item" data-section="gallery">
+                <span class="nav-icon">🖼️</span>
+                Gallery
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Student Summary -->
+            <div class="student-summary glass">
+                <div class="student-info">
+                    <h2>Welcome back, <span id="student-name">Student</span></h2>
+                    <div class="student-details">
+                        <div class="detail-item">
+                            <strong>Roll:</strong> <span id="student-roll">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Dept:</strong> <span id="student-branch">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Year:</strong> <span id="student-class">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Division:</strong> <span id="student-division">-</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
+                    <button class="logout-btn" onclick="window.location.href='index.html'">Logout</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div class="content-section active" id="dashboard">
+                <h1 class="section-title">Dashboard Overview</h1>
+                <div class="events-grid">
+                    <div style="background: rgba(255, 215, 0, 0.1); padding: 24px; text-align: center; border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 12px;">
+                        <h3 style="color: #ffd700; margin-bottom: 16px;">Quick Stats</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 16px;">
+                            <div>
+                                <div style="font-size: 24px; font-weight: 700; color: #ffd700;">5</div>
+                                <div style="color: rgba(255,215,0,0.7); font-size: 12px;">Applied</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 24px; font-weight: 700; color: #28a745;">3</div>
+                                <div style="color: rgba(255,215,0,0.7); font-size: 12px;">Approved</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 24px; font-weight: 700; color: #ffc107;">2</div>
+                                <div style="color: rgba(255,215,0,0.7); font-size: 12px;">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass" style="padding: 24px;">
+                        <h3 style="color: #ffd700; margin-bottom: 16px;">Recent Activity</h3>
+                        <div style="space-y: 12px;">
+                            <div style="color: rgba(255,255,255,0.8); font-size: 14px; margin-bottom: 8px;">✅ Applied for Tech Symposium</div>
+                            <div style="color: rgba(255,255,255,0.8); font-size: 14px; margin-bottom: 8px;">📜 Certificate downloaded for Coding Contest</div>
+                            <div style="color: rgba(255,255,255,0.8); font-size: 14px;">🎉 Approved for Cultural Fest</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Events Section -->
+ 
+<div class="content-section" id="events">
+  <h1 class="section-title">Live Events</h1>
+  <div class="events-grid" id="events-container">
+    <!-- JS will inject events here -->
+  </div>
+</div>
+<div class="content-section" id="my-applications">
+  <h1 class="section-title">My Applications</h1>
+  <div id="applications-container">
+    <!-- JS will inject applications here -->
+  </div>
+</div>
+
+            <!-- Gallery Section -->
+            <div class="content-section" id="gallery">
+                <h1 class="section-title">Event Gallery</h1>
+                <div class="gallery-grid" id="gallery-container">
+                    <!-- Gallery items will be populated by JavaScript -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Event Detail Modal -->
+
+    
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+    <script>
+async function fetchApplications() {
+  const container = document.getElementById("applications-container");
+  container.innerHTML = "";
+
+  if (!userId) {
+    container.innerHTML = "<p>User not logged in.</p>";
+    return;
+  }
+
+  try {
+    const eventsSnapshot = await db.collection("events").get();
+
+    let found = false;
+
+    for (const eventDoc of eventsSnapshot.docs) {
+      const eventId = eventDoc.id;
+      const eventData = eventDoc.data();
+
+      const applicationRef = db
+        .collection("events")
+        .doc(eventId)
+        .collection("applications")
+        .doc(userId);
+
+      const applicationSnap = await applicationRef.get();
+
+      if (applicationSnap.exists) {
+        found = true;
+
+        const applicationData = applicationSnap.data();
+        const appliedAt = applicationData.appliedAt?.toDate().toLocaleString() || "N/A";
+
+        const card = document.createElement("div");
+        card.className = "applied-event-card";
+        card.innerHTML = `
+          <h4>${eventData.title}</h4>
+          <p><strong>Applied At:</strong> ${appliedAt}</p>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    if (!found) {
+      container.innerHTML = "<p>You haven’t applied to any events yet.</p>";
+    }
+
+  } catch (error) {
+    console.error("Error fetching applications:", error);
+    container.innerHTML = "<p>Error loading applications.</p>";
+  }
+}
+firebase.auth().onAuthStateChanged(async (user) => {
+  if (user) {
+    userId = user.uid;
+    await fetchApplications();
+  }
+});
+
+
+let userId = "";
+let studentName = "";
+let applicationsData = [];
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const user = auth.currentUser || await new Promise(resolve => auth.onAuthStateChanged(resolve));
+  if (user) {
+    userId = user.uid;
+    await fetchStudentDetails();
+    await fetchAndRenderEvents();
+    await fetchApplications();
+
+   // await fetchGalleryImages();
+  }
+});
+
+// Fetch student details
+async function fetchStudentDetails() {
+  try {
+    const doc = await db.collection("students").doc(userId).get();
+    if (doc.exists) {
+      const data = doc.data();
+      studentName = data.fullName || "";
+
+      document.getElementById("student-name").innerText = data.fullName || "-";
+      document.getElementById("student-roll").innerText = data.rollNumber || "-";
+      document.getElementById("student-class").innerText = data.classYear || "-";
+      document.getElementById("student-branch").innerText = data.department || "-";
+      document.getElementById("student-division").innerText = data.division || "-";
+    }
+  } catch (error) {
+    console.error("Error fetching student details:", error);
+  }
+}
+
+// Fetch and render live events
+async function fetchAndRenderEvents() {
+  const eventsContainer = document.getElementById("events-container");
+  eventsContainer.innerHTML = "";
+
+  try {
+    // Step 1: Get all event applications for the current user
+    const appliedEventIds = new Set();
+    const eventsSnapshot = await db.collection("events").get();
+    for (const doc of eventsSnapshot.docs) {
+      const application = await db
+        .collection("events")
+        .doc(doc.id)
+        .collection("applications")
+        .doc(userId)
+        .get();
+      if (application.exists) {
+        appliedEventIds.add(doc.id);
+      }
+    }
+
+    // Step 2: Now fetch and display live events
+    const snapshot = await db.collection("events")
+      .where("status", "==", "active")
+      .orderBy("createdAt", "desc")
+      .get();
+
+    if (snapshot.empty) {
+      eventsContainer.innerHTML = "<p>No live events found.</p>";
+      return;
+    }
+
+    snapshot.forEach(doc => {
+      const event = doc.data();
+      const isApplied = appliedEventIds.has(doc.id);
+
+      const eventCard = document.createElement("div");
+      eventCard.className = "event-card";
+
+      eventCard.innerHTML = `
+        <img src="${event.imageUrl}" class="event-img" alt="Event Image" />
+        <div class="event-content">
+          <h3 class="event-title">${event.title}</h3>
+          <p class="event-description">${event.description}</p>
+          <button class="event-apply-btn" id="apply-btn-${doc.id}" ${isApplied ? "disabled" : ""}>
+            ${isApplied ? "Applied" : "Apply"}
+          </button>
+        </div>
+      `;
+
+      eventsContainer.appendChild(eventCard);
+
+      // Attach click handler only if not applied
+      if (!isApplied) {
+        document.getElementById(`apply-btn-${doc.id}`).onclick = () => applyToEvent(doc.id);
+      }
+    });
+
+  } catch (error) {
+    console.error("Error fetching events:", error);
+  }
+}
+// Apply to an event
+async function applyToEvent(eventId) {
+  if (!userId || !studentName) {
+    alert("User not authenticated or student name missing.");
+    return;
+  }
+
+  try {
+    const eventRef = db.collection("events").doc(eventId);
+    const eventDoc = await eventRef.get();
+
+    if (!eventDoc.exists) {
+      console.error("Event not found.");
+      return;
+    }
+
+    const applicationRef = eventRef.collection("applications").doc(userId);
+    const applicationDoc = await applicationRef.get();
+
+    if (applicationDoc.exists) {
+      alert("You have already applied to this event.");
+      return;
+    }
+
+    await applicationRef.set({
+      userId,
+      name: studentName,
+      appliedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert("Successfully applied to the event!");
+    await fetchApplications();
+    renderApplications();
+  } catch (error) {
+    console.error("Error applying to event:", error);
+  }
+}
+
+// Fetch applications
+async function fetchApplications() {
+  applicationsData = [];
+
+  try {
+    const eventsSnapshot = await db.collection("events").get();
+    for (const eventDoc of eventsSnapshot.docs) {
+      const eventId = eventDoc.id;
+      const applicationDoc = await db.collection("events").doc(eventId)
+        .collection("applications").doc(userId).get();
+
+      if (applicationDoc.exists) {
+        const eventData = eventDoc.data();
+        applicationsData.push({
+          title: eventData.title,
+          appliedAt: applicationDoc.data().appliedAt?.toDate().toLocaleString() || "N/A"
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching applications:", error);
+  }
+}
+
+// Render applications
+
+// Fetch gallery images
+async function fetchGalleryImages() {
+  const galleryRef = db.collection("gallery");
+  const snapshot = await galleryRef.orderBy("timestamp", "desc").get();
+  const galleryContainer = document.getElementById("gallery-list");
+  galleryContainer.innerHTML = "";
+
+  if (snapshot.empty) {
+    galleryContainer.innerHTML = "<p>No images in gallery.</p>";
+    return;
+  }
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    const imageCard = document.createElement("div");
+    imageCard.className = "gallery-card";
+    imageCard.innerHTML = `
+      <img src="${data.imageUrl}" alt="Event Image" class="gallery-image" />
+      <p class="gallery-caption">${data.caption || "Event"}</p>
+    `;
+    galleryContainer.appendChild(imageCard);
+  });
+}
+
+ 
+                    // Initialize particles
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            for (let i = 0; i < 80; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                
+                // Add some variety to particle sizes and glow
+                const size = Math.random() * 3 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // Random glow intensity
+                const glowIntensity = Math.random() * 0.8 + 0.2;
+                particle.style.opacity = glowIntensity;
+                
+                particles.appendChild(particle);
+            }
+        }
+
+        // Navigation functionality
+        function initNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('.content-section');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Remove active class from all nav items and sections
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    sections.forEach(section => section.classList.remove('active'));
+
+                    // Add active class to clicked nav item and corresponding section
+                    item.classList.add('active');
+                    const sectionId = item.getAttribute('data-section');
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            });
+        }
+
+        // Initialize all functionality
+        function init() {
+            createParticles();
+            initNavigation();
+        
+          
+            
+            // Initial render
+        
+            renderApplications();
+            //renderGallery();
+        }
+
+        // Start the application
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Add some responsive behavior
+        window.addEventListener('resize', () => {
+            // Recreate particles on resize for better distribution
+            const particles = document.getElementById('particles');
+            particles.innerHTML = '';
+            createParticles();
+        });
+
+        // Add smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add loading states for better UX
+        function showLoading(container) {
+            container.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7); padding: 40px;">Loading...</div>';
+        }
+
+        // Enhanced apply function with loading state
+        function handleApplyWithLoading(eventId) {
+            const button = document.querySelector(`[onclick="handleApplyWithLoading(${eventId})"]`);
+            const originalText = button.textContent;
+            
+            button.textContent = 'Applying...';
+            button.disabled = true;
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                handleApply(eventId);
+            }, 500);
+        }
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case '1':
+                        e.preventDefault();
+                        document.querySelector('[data-section="dashboard"]').click();
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        document.querySelector('[data-section="events"]').click();
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        document.querySelector('[data-section="applications"]').click();
+                        break;
+                    case '4':
+                        e.preventDefault();
+                        document.querySelector('[data-section="gallery"]').click();
+                        break;
+                }
+            }
+        });
+        function downloadCertificate(eventId) {
+    const studentId = auth.currentUser.uid;
+    const filePath = `certificates/${eventId}/${studentId}.pdf`;
+
+    storage.ref(filePath).getDownloadURL()
+        .then((url) => {
+            window.open(url, '_blank');
+        })
+        .catch((error) => {
+            console.error("Certificate download failed:", error);
+            showToast("Certificate not available yet.");
+        });
+}
+
+
+        // Add search functionality (placeholder for future enhancement)
+        function addSearchFunctionality() {
+            // This could be enhanced to add a search bar
+            // and filter events by title or description
+            console.log('Search functionality ready to be implemented');
+        }
+
+        // Export functions for potential testing or external use
+        window.dashboardAPI = {
+            handleApplyWithLoading,
+
+            downloadCertificate,
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACES Admin Dashboard - AVCOE</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+
+<!-- Your Firebase config -->
+<script src="firebase-config.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1e1e3f 0%, #2a2a5a 100%);
+            padding: 2rem 0;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 0 2rem;
+        }
+
+        .logo h1 {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo p {
+            color: #a0a0b0;
+            font-size: 0.9rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0 1rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: #b0b0c0;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: linear-gradient(45deg, #00d4ff20, #0099cc20);
+            color: #00d4ff;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(180deg, #00d4ff, #0099cc);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 1rem;
+            fill: currentColor;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffffff, #a0a0b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: #a0a0b0;
+            font-size: 1.1rem;
+        }
+
+        /* Cards */
+        .card {
+            background: linear-gradient(145deg, #2a2a4a, #1f1f3a);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #00d4ff;
+            margin-bottom: 1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.2);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            height: 120px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #00b8e6, #0088bb);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #666, #555);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff4757, #ff3742);
+            color: white;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #2a2a4a, #1f1f3a);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: #a0a0b0;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .table th {
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            background: linear-gradient(145deg, #2a2a4a, #1f1f3a);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .gallery-content {
+            padding: 1.5rem;
+        }
+
+        .gallery-caption {
+            color: #ffffff;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #2a2a4a, #1f1f3a);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #00d4ff;
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .file-upload.dragover {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        /* Preview Images */
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        /* Event Cards */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .event-card {
+            background: linear-gradient(145deg, #2a2a4a, #1f1f3a);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .event-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .event-content {
+            padding: 1.5rem;
+        }
+
+        .event-title {
+            color: #00d4ff;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-description {
+            color: #a0a0b0;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
+            .nav-link span {
+                display: none;
+            }
+            
+            .logo h1 {
+                font-size: 1rem;
+            }
+            
+            .logo p {
+                display: none;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+ /* Minimalist Black & White Table */
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  color: #111; /* dark text */
+  background: #fff; /* white background */
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Headers */
+.user-table thead tr {
+  border-bottom: 2px solid #000;
+}
+
+.user-table th {
+  padding: 12px 20px;
+  font-weight: 600;
+  text-align: left;
+  letter-spacing: 0.03em;
+  background-color: #f9f9f9;
+  user-select: none;
+}
+
+/* Body rows */
+.user-table tbody tr {
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.user-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* Hover effect */
+.user-table tbody tr:hover {
+  background-color: #f0f0f0;
+}
+
+/* Cells padding */
+.user-table td {
+  padding: 12px 20px;
+  vertical-align: middle;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+/* Highlight incomplete rows (if using JS to add inline style) */
+.user-table tr[style*="background-color"] {
+  font-weight: 600;
+  font-style: italic;
+}
+
+/* Responsive: horizontal scroll on small screens */
+@media (max-width: 600px) {
+  .user-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>ACES</h1>
+                <p>ACES Admin Panel</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-section="dashboard">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="events">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                        </svg>
+                        <span>Events</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="gallery">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                        </svg>
+                        <span>Gallery</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="users">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M16 17v2H2v-2s0-4 7-4 7 4 7 4zm-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5z"/>
+                        </svg>
+                        <span>Users</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="applications">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                        </svg>
+                        <span>Applications</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <h1 class="section-title">Dashboard</h1>
+                    <p class="section-subtitle">Welcome to ACES Admin Panel - Manage your student committee efficiently</p>
+                </div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-number">0</div> <!-- index 0 -->
+    <div class="stat-label">Total Users</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">0</div> <!-- index 1 -->
+    <div class="stat-label">Active Events</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">0</div> <!-- index 2 -->
+    <div class="stat-label">Applications</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">0</div> <!-- index 3 -->
+    <div class="stat-label">Gallery Images</div>
+  </div>
+</div>
+
+                <div class="card">
+                    <h3 class="card-title">Recent Activity</h3>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Activity</th>
+                                    <th>User</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>New event application</td>
+                                    <td>John Doe</td>
+                                    <td>2 hours ago</td>
+                                    <td><span class="badge">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Gallery image uploaded</td>
+                                    <td>Admin</td>
+                                    <td>5 hours ago</td>
+                                    <td><span class="badge">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>New user registration</td>
+                                    <td>Jane Smith</td>
+                                    <td>1 day ago</td>
+                                    <td><span class="badge">Active</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Events Section -->
+            <section id="events" class="content-section">
+                <div class="section-header">
+                    <h1 class="section-title">Events Management</h1>
+                    <p class="section-subtitle">Create and manage events for ACES community</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Create New Event</h3>
+                    <form id="createEventForm">
+                        <div class="form-group">
+                            <label class="form-label">Event Title</label>
+                            <input type="text" class="form-input" id="eventTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Event Description</label>
+                            <textarea class="form-textarea" id="eventDescription" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Event Date</label>
+                            <input type="datetime-local" class="form-input" id="eventDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Event Image</label>
+                            <div class="file-upload" id="eventImageUpload">
+                                <p>Click or drag to upload event image</p>
+                                <input type="file" id="eventImageFile" accept="image/*" style="display: none;">
+                                <img id="eventImagePreview" class="image-preview" style="display: none;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Event Poster/Invitation</label>
+                            <div class="file-upload" id="eventPosterUpload">
+                                <p>Click or drag to upload poster (PDF or Image)</p>
+                                <input type="file" id="eventPosterFile" accept="image/*,.pdf" style="display: none;">
+                                <div id="eventPosterPreview" style="display: none; margin-top: 1rem;"></div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Event</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Active Events</h3>
+                    <div class="events-grid" id="eventsGrid">
+                        <!-- Sample Events -->
+                                            </div>
+                </div>
+            </section>
+
+            <!-- Gallery Section -->
+            <section id="gallery" class="content-section">
+                <div class="section-header">
+                    <h1 class="section-title">Gallery Management</h1>
+                    <p class="section-subtitle">Upload and manage images in the ACES gallery</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Upload New Image</h3>
+                    <form id="galleryUploadForm">
+                        <div class="form-group">
+                            <label class="form-label">Image Caption</label>
+                            <input type="text" class="form-input" id="galleryCaption" placeholder="Enter image caption" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Select Image</label>
+                            <div class="file-upload" id="galleryImageUpload">
+                                <p>Click or drag to upload image</p>
+                                <input type="file" id="galleryImageFile" accept="image/*" style="display: none;">
+                                <img id="galleryImagePreview" class="image-preview" style="display: none;">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save to Gallery</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Gallery Images</h3>
+                    <div class="gallery-grid" id="galleryGrid">
+                        <!-- Sample Gallery Items -->
+                        <div class="gallery-item">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%2320bf6b'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='16' fill='white'%3EACES Event 2024%3C/text%3E%3C/svg%3E" alt="ACES Event" class="gallery-image">
+                            <div class="gallery-content">
+                                <p class="gallery-caption">ACES Annual Tech Fest 2024</p>
+                                <button class="btn btn-danger" style="font-size: 0.9rem; padding: 0.5rem 1rem;">Delete</button>
+                            </div>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23fa8231'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='16' fill='white'%3EWorkshop%3C/text%3E%3C/svg%3E" alt="Workshop" class="gallery-image">
+                            <div class="gallery-content">
+                                <p class="gallery-caption">Web Development Workshop</p>
+                                <button class="btn btn-danger" style="font-size: 0.9rem; padding: 0.5rem 1rem;">Delete</button>
+                            </div>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%233742fa'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='16' fill='white'%3ETeam Meeting%3C/text%3E%3C/svg%3E" alt="Team Meeting" class="gallery-image">
+                            <div class="gallery-content">
+                                <p class="gallery-caption">ACES Committee Meeting</p>
+                                <button class="btn btn-danger" style="font-size: 0.9rem; padding: 0.5rem 1rem;">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users" class="content-section">
+                <div class="section-header">
+                    <h1 class="section-title">User Management</h1>
+                    <p class="section-subtitle">View and manage active users in ACES community</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">User Filters</h3>
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label class="form-label">Division</label>
+                            <select class="form-select" id="divisionFilter">
+                                <option value="">All Divisions</option>
+                                <option value="A">Division A</option>
+                                <option value="B">Division B</option>
+                                <option value="C">Division C</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="form-label">Branch</label>
+                            <select class="form-select" id="branchFilter">
+                                <option value="">All Branches</option>
+                                <option value="Computer">Computer Engineering</option>
+                                <option value="IT">Information Technology</option>
+                                <option value="Electronics">Electronics Engineering</option>
+                                <option value="Mechanical">Mechanical Engineering</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="form-label">Class</label>
+                            <select class="form-select" id="classFilter">
+                                <option value="">All Classes</option>
+                                <option value="FE">First Year</option>
+                                <option value="SE">Second Year</option>
+                                <option value="TE">Third Year</option>
+                                <option value="BE">Final Year</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="form-label" style="opacity: 0;">Apply</label>
+                            <button class="btn btn-primary" onclick="applyUserFilters()">Apply Filters</button>
+                        </div>
+                    </div>
+                </div>
+ <table class="user-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Roll</th>
+      <th>Branch</th>
+      <th>Class</th>
+    </tr>
+  </thead>
+  <tbody id="usersTableBody">
+    <!-- Populated by JS -->
+  </tbody>
+</table>
+
+
+               <tbody id="usersTableBody">
+    <!-- Fetched users will appear here -->
+</tbody>
+
+            </section>
+<!-- Applications Section -->
+<section id="applications" class="content-section">
+  <div class="section-header">
+    <h1 class="section-title">Event Applications</h1>
+    <p class="section-subtitle">View and manage event applications from students</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="card">
+    <h3 class="card-title">Filter Applications</h3>
+    <div class="filters">
+      <div class="filter-group">
+        <label class="form-label">Event</label>
+        <select class="form-select" id="eventApplicationFilter">
+          <option value="">All Events</option>
+          <!-- Populate dynamically from JS -->
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="form-label">Status</label>
+        <select class="form-select" id="statusApplicationFilter">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="form-label" style="opacity: 0;">Apply</label>
+        <button class="btn btn-primary" onclick="applyApplicationFilters()">Apply Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Applications Table -->
+  <div class="card">
+    <h3 class="card-title">Recent Applications</h3>
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Student Name</th>
+            <th>Roll No</th>
+            <th>Branch</th>
+            <th>Division</th>
+            <th>Class</th>
+            <th>Applied Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="applicationsTableBody">
+          <!-- JavaScript will dynamically insert applications here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Application Details Modal -->
+<div id="applicationModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('applicationModal')">&times;</span>
+    <h2 style="color: #00d4ff; margin-bottom: 1rem;">Application Details</h2>
+    <div id="applicationDetails">
+      <!-- JS will populate this -->
+    </div>
+  </div>
+</div>
+
+
+    <script>
+const usersTableBody = document.getElementById("usersTableBody");
+const divisionFilter = document.getElementById("divisionFilter");
+const branchFilter = document.getElementById("branchFilter");
+const classFilter = document.getElementById("classFilter");
+
+let allUsers = []; // Store all users
+
+// Load users from Firestore and setup filters
+async function loadAllUsers() {
+  usersTableBody.innerHTML = "<tr><td colspan='5'>Loading users...</td></tr>";
+
+  try {
+    const snapshot = await db.collection("students").get();
+
+    if (snapshot.empty) {
+      usersTableBody.innerHTML = "<tr><td colspan='5'>No users found.</td></tr>";
+      return;
+    }
+
+    allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    populateFilters(allUsers);
+    renderUsers(allUsers);
+  } catch (err) {
+    console.error("Error loading users:", err);
+    usersTableBody.innerHTML = "<tr><td colspan='5'>Failed to load users.</td></tr>";
+  }
+}
+
+// Dynamically populate filters based on user data
+function populateFilters(users) {
+  const getUnique = (arr) => [...new Set(arr.filter(Boolean))];
+
+  const divisions = getUnique(users.map(u => u.division));
+  const branches = getUnique(users.map(u => u.department));
+  const classes = getUnique(users.map(u => u.classYear));
+
+  const makeOptions = (items) => ['<option value="">All</option>', ...items.map(i => `<option value="${i}">${i}</option>`)].join("");
+
+  divisionFilter.innerHTML = makeOptions(divisions);
+  branchFilter.innerHTML = makeOptions(branches);
+  classFilter.innerHTML = makeOptions(classes);
+}
+
+// Render filtered users in table
+function renderUsers(users) {
+  if (!users.length) {
+    usersTableBody.innerHTML = "<tr><td colspan='5'>No matching users found.</td></tr>";
+    return;
+  }
+
+  usersTableBody.innerHTML = users.map(user => `
+    <tr>
+      <td>${user.fullName || '-'}</td>
+      <td>${user.email || '-'}</td>
+      <td>${user.rollNumber || '-'}</td>
+      <td>${user.department || '-'}</td>
+      <td>${user.classYear || '-'}</td>
+    </tr>
+  `).join("");
+}
+
+// Apply selected filters
+function applyUserFilters() {
+  const selectedDivision = divisionFilter.value;
+  const selectedBranch = branchFilter.value;
+  const selectedClass = classFilter.value;
+
+  const filtered = allUsers.filter(user =>
+    (!selectedDivision || user.division === selectedDivision) &&
+    (!selectedBranch || user.department === selectedBranch) &&
+    (!selectedClass || user.classYear === selectedClass)
+  );
+
+  renderUsers(filtered);
+}
+
+// Initial load
+loadAllUsers();
+
+        async function loadActiveEvents() {
+  const eventsGrid = document.getElementById("eventsGrid");
+  if (!eventsGrid) return;
+
+  try {
+    const snapshot = await db.collection("events").where("status", "==", "active").get();
+
+    if (snapshot.empty) {
+      eventsGrid.innerHTML = "<p>No active events right now.</p>";
+      return;
+    }
+
+    eventsGrid.innerHTML = snapshot.docs.map(doc => {
+  const event = doc.data();
+  const eventDate = event.date?.toDate?.(); // Convert Firestore Timestamp safely
+  const formattedDate = eventDate
+    ? eventDate.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })
+    : 'Date not set';
+
+  return `
+    <div class="event-card">
+      <img src="${event.imageUrl || 'default-event.png'}" alt="${event.title}" class="event-image">
+      <div class="event-content">
+        <h4 class="event-title">${event.title}</h4>
+        <p class="event-description">${event.description}</p>
+        <p class="event-date"><strong>Date:</strong> ${formattedDate}</p>
+        <div class="event-actions">
+          <button class="btn btn-primary" onclick="viewApplications('${doc.id}')">View Applications</button>
+          <button class="btn btn-secondary">Edit</button>
+        </div>
+      </div>
+    </div>
+  `;
+}).join('');
+
+  } catch (error) {
+    console.error("❌ Error loading active events:", error);
+    eventsGrid.innerHTML = "<p>Error loading events.</p>";
+  }
+}
+
+      document.addEventListener("DOMContentLoaded", async () => {
+  // Initialize Firestore
+  const db = firebase.firestore();
+
+  // DOM elements (ensure these are in the correct order in your HTML)
+  const statElements = document.querySelectorAll(".stat-number");
+
+  try {
+    // 1. Total Users
+    const usersSnap = await db.collection("students").get();
+    statElements[0].textContent = usersSnap.size;
+
+    // 2. Active Events
+    const eventsSnap = await db.collection("events").where("status", "==", "active").get();
+    statElements[1].textContent = eventsSnap.size;
+
+    // 3. Applications
+    const appsSnap = await db.collection("applications").get();
+    statElements[2].textContent = appsSnap.size;
+
+    // 4. Gallery Images
+    const gallerySnap = await db.collection("gallery").get();
+    statElements[3].textContent = gallerySnap.size;
+
+  } catch (error) {
+    console.error("❌ Error fetching stats:", error);
+  }
+});
+      document.addEventListener("DOMContentLoaded", () => {
+  console.log('ACES Admin Dashboard initialized');
+loadActiveEvents(); // 🔁 Refresh the event list
+
+  // ========== FORM SUBMISSION: CREATE EVENT ==========
+  const eventForm = document.getElementById('createEventForm');
+if (eventForm) {
+  eventForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const title = document.getElementById('eventTitle').value.trim();
+const description = document.getElementById('eventDescription').value.trim();
+const date = document.getElementById('eventDate').value; // ISO format
+const file = document.getElementById('eventImageFile').files[0];
+
+
+    if (!title || !description) {
+      return alert("Please fill all required fields");
+    }
+
+    let imageUrl = ""; // Default to empty if no image
+
+    if (file) {
+      const storageRef = storage.ref(`eventPosters/${Date.now()}_${file.name}`);
+      await storageRef.put(file);
+      imageUrl = await storageRef.getDownloadURL();
+    }
+
+  await db.collection('events').add({
+  title,
+  description,
+  imageUrl,
+  status: "active",
+  date: firebase.firestore.Timestamp.fromDate(new Date(date)), // 👈
+  createdAt: firebase.firestore.FieldValue.serverTimestamp()
+});
+
+
+    alert("✅ Event created!");
+    eventForm.reset();
+    document.getElementById('eventImagePreview').style.display = 'none';
+    document.getElementById('eventPosterPreview').style.display = 'none';
+
+    // Optional: add to grid
+    addEventToGrid(title, description, new Date().toISOString().split("T")[0]);
+  });
+}
+
+
+
+  // ========== FORM SUBMISSION: UPLOAD TO GALLERY ==========
+const galleryForm = document.getElementById('galleryUploadForm');
+
+if (galleryForm) {
+  galleryForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const caption = document.getElementById('galleryCaption').value.trim();
+    const file = document.getElementById('galleryImageFile').files[0];
+
+    if (!file || !caption) {
+      alert("Please select image and caption");
+      return;
+    }
+
+    const filePath = `gallery/${Date.now()}_${file.name}`;
+    const storageRef = storage.ref(filePath);
+    
+    try {
+      // Upload image to Firebase Storage
+      await storageRef.put(file);
+      const imageUrl = await storageRef.getDownloadURL();
+
+      // Save metadata to Firestore with imagePath
+      await db.collection('gallery').add({
+        caption,
+        imageUrl,          // Optional, still useful for preview fallback
+        imagePath: filePath, // Important for dynamic retrieval
+        uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      alert("✅ Gallery image uploaded!");
+      galleryForm.reset();
+      document.getElementById('galleryImagePreview').style.display = 'none';
+
+      addImageToGallery(caption, file); // Local preview if implemented
+
+    } catch (err) {
+      console.error("❌ Error uploading image:", err);
+      alert("Failed to upload image. Try again.");
+    }
+  });
+}
+
+
+  // ========== LOAD ACTIVE USERS ==========
+
+
+  // ========== LOAD EVENT APPLICATIONS ==========
+document.addEventListener("DOMContentLoaded", () => {
+  firebase.auth().onAuthStateChanged(async user => {
+    if (user) {
+      const userId = user.uid;
+      console.log("User logged in:", userId);
+      await loadMyApplications(userId);
+    } else {
+      console.log("User not logged in.");
+      document.getElementById("applications-container").innerHTML = "<p>Please log in to view your applications.</p>";
+    }
+  });
+});
+
+async function loadMyApplications(userId) {
+  const container = document.getElementById("applications-container");
+  container.innerHTML = "<p>Loading your applications...</p>";
+
+  try {
+    const eventsSnapshot = await db.collection("events").get();
+
+    let applicationsHTML = "";
+    let foundApplications = false;
+
+    for (const eventDoc of eventsSnapshot.docs) {
+      const eventId = eventDoc.id;
+      const eventData = eventDoc.data();
+
+      const appDoc = await db.collection("events").doc(eventId)
+        .collection("applications")
+        .doc(userId)
+        .get();
+
+      if (appDoc.exists) {
+        foundApplications = true;
+        const appData = appDoc.data();
+
+        applicationsHTML += `
+          <div class="application-card">
+            <h3>${eventData.title || "Untitled Event"}</h3>
+            <p><strong>Status:</strong> ${capitalize(appData.status || "pending")}</p>
+            <p><strong>Applied At:</strong> ${appData.appliedAt?.toDate().toLocaleString() || "N/A"}</p>
+          </div>
+        `;
+      }
+    }
+
+    container.innerHTML = foundApplications
+      ? applicationsHTML
+      : "<p>You haven't applied to any events yet.</p>";
+
+  } catch (err) {
+    console.error("Error loading applications:", err);
+    container.innerHTML = "<p>Error loading applications. Try again later.</p>";
+  }
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+  // ========== SETUP FILE UPLOAD AREAS ==========
+  const setupFileUpload = (uploadId, fileId, previewId) => {
+    const uploadArea = document.getElementById(uploadId);
+    const fileInput = document.getElementById(fileId);
+    const preview = document.getElementById(previewId);
+    if (!uploadArea || !fileInput || !preview) return;
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        handleFilePreview(files[0], preview);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleFilePreview(e.target.files[0], preview);
+      }
+    });
+  };
+
+  const handleFilePreview = (file, previewElement) => {
+    if (!file || !previewElement) return;
+
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (previewElement.tagName === 'IMG') {
+          previewElement.src = e.target.result;
+          previewElement.style.display = 'block';
+        } else {
+          previewElement.innerHTML = `<img src="${e.target.result}" class="image-preview" alt="Preview">`;
+          previewElement.style.display = 'block';
+        }
+      };
+      reader.readAsDataURL(file);
+    } else if (file.type === 'application/pdf') {
+      previewElement.innerHTML = `<p style="color: #00d4ff; margin-top: 1rem;">📁 ${file.name} (PDF)</p>`;
+      previewElement.style.display = 'block';
+    }
+  };
+
+  setupFileUpload('eventImageUpload', 'eventImageFile', 'eventImagePreview');
+  setupFileUpload('eventPosterUpload', 'eventPosterFile', 'eventPosterPreview');
+  setupFileUpload('galleryImageUpload', 'galleryImageFile', 'galleryImagePreview');
+//------------------------------------------------------
+const applicationsTableBody = document.getElementById("applicationsTableBody");
+const eventFilter = document.getElementById("eventApplicationFilter");
+const statusFilter = document.getElementById("statusApplicationFilter");
+
+// Load on page load
+document.addEventListener("DOMContentLoaded", async () => {
+  await populateEventFilter();
+  loadApplications();
+});
+
+async function populateEventFilter() {
+  const snapshot = await db.collection("events").get();
+  snapshot.forEach(doc => {
+    const option = document.createElement("option");
+    option.value = doc.id;
+    option.textContent = doc.data().name || doc.id;
+    eventFilter.appendChild(option);
+  });
+}
+
+async function loadApplications(eventId = "", status = "") {
+  applicationsTableBody.innerHTML = "<tr><td colspan='9'>Loading...</td></tr>";
+  applicationsTableBody.innerHTML = "";
+
+  const eventQuery = eventId
+    ? db.collection("events").where("__name__", "==", eventId)
+    : db.collection("events");
+
+  const eventSnapshots = await eventQuery.get();
+
+  let allRows = [];
+
+  for (const eventDoc of eventSnapshots.docs) {
+    const currentEventId = eventDoc.id;
+    const currentEventName = eventDoc.data().name || currentEventId;
+
+    const applicationsRef = db.collection("events").doc(currentEventId).collection("applications");
+    const appSnapshot = await applicationsRef.orderBy("appliedAt", "desc").get();
+
+    appSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (status && data.status !== status) return;
+
+      const appliedDate = data.appliedAt?.toDate().toLocaleDateString("en-IN") || "N/A";
+      const statusBadge = `<span class="badge">${capitalize(data.status || "pending")}</span>`;
+
+      const row = `
+        <tr>
+          <td>${currentEventName}</td>
+          <td>${data.name || "-"}</td>
+          <td>${data.rollNo || "-"}</td>
+          <td>${data.branch || "-"}</td>
+          <td>${data.division || "-"}</td>
+          <td>${data.class || "-"}</td>
+          <td>${appliedDate}</td>
+          <td>${statusBadge}</td>
+          <td>
+            <button class="btn btn-secondary" onclick="viewApplication('${currentEventId}', '${doc.id}')">View</button>
+          </td>
+        </tr>
+      `;
+      allRows.push(row);
+    });
+  }
+
+  applicationsTableBody.innerHTML = allRows.length
+    ? allRows.join("")
+    : "<tr><td colspan='9'>No applications found.</td></tr>";
+}
+
+function applyApplicationFilters() {
+  const selectedEvent = eventFilter.value;
+  const selectedStatus = statusFilter.value;
+  loadApplications(selectedEvent, selectedStatus);
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function viewApplication(eventId, appId) {
+  const modal = document.getElementById("applicationModal");
+  const detailsDiv = document.getElementById("applicationDetails");
+
+  db.collection("events").doc(eventId).collection("applications").doc(appId).get().then(doc => {
+    if (!doc.exists) {
+      detailsDiv.innerHTML = "<p>Application not found.</p>";
+    } else {
+      const data = doc.data();
+      detailsDiv.innerHTML = `
+        <p><strong>Name:</strong> ${data.name || "-"}</p>
+        <p><strong>Roll No:</strong> ${data.rollNo || "-"}</p>
+        <p><strong>Branch:</strong> ${data.branch || "-"}</p>
+        <p><strong>Division:</strong> ${data.division || "-"}</p>
+        <p><strong>Class:</strong> ${data.class || "-"}</p>
+        <p><strong>Status:</strong> ${capitalize(data.status || "pending")}</p>
+        <p><strong>Date:</strong> ${data.appliedAt?.toDate().toLocaleString() || "N/A"}</p>
+      `;
+    }
+    modal.style.display = "block";
+  });
+}
+
+function closeModal(id) {
+  document.getElementById(id).style.display = "none";
+}
+document.addEventListener("DOMContentLoaded", () => {
+  loadApplications(); // or your function name
+});
+
+  // ========== SIDEBAR NAVIGATION ==========
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+
+      link.classList.add('active');
+      const sectionId = link.getAttribute('data-section');
+      document.getElementById(sectionId)?.classList.add('active');
+    });
+  });
+
+  // ========== DASHBOARD ENTRY ANIMATION ==========
+  document.querySelectorAll('.stat-card').forEach((card, index) => {
+    card.style.animationDelay = `${index * 0.1}s`;
+    card.style.animation = 'fadeInUp 0.6s ease forwards';
+  });
+
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  `;
+  document.head.appendChild(style);
+});
+const galleryContainer = document.getElementById("galleryContainer"); // Make sure this ID exists
+
+async function loadGalleryImages() {
+  if (!galleryContainer) return;
+
+  try {
+    const snapshot = await db.collection("gallery").orderBy("uploadedAt", "desc").get();
+
+    if (snapshot.empty) {
+      galleryContainer.innerHTML = "<p>No gallery images yet.</p>";
+      return;
+    }
+
+    galleryContainer.innerHTML = snapshot.docs.map(doc => {
+      const item = doc.data();
+      const uploadedAt = item.uploadedAt?.toDate?.().toLocaleString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }) || 'Date Unknown';
+
+      return `
+        <div class="gallery-item">
+          <img src="${item.imageUrl}" alt="Gallery Image" class="gallery-img">
+          <p class="caption">${item.caption}</p>
+          <small class="timestamp">📅 ${uploadedAt}</small>
+        </div>
+      `;
+    }).join('');
+  } catch (error) {
+    console.error("Error loading gallery images:", error);
+    galleryContainer.innerHTML = "<p>Error loading images.</p>";
+  }
+}
+
+loadGalleryImages(); // Load images on page load
+
+
+
+    </script>
+</body>
+</html>

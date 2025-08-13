@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACES - Association of Computer Engineering Students</title>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap"></noscript>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}:root{--primary-bg:#0B0F19;--secondary-bg:#1A1F2E;--accent-yellow:#FCD34D;--accent-yellow-dark:#F59E0B;--text-primary:#FFFFFF;--text-secondary:#9CA3AF;--text-muted:#6B7280;--glass-bg:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.1);--shadow-glow:0 0 30px rgba(252,211,77,0.3);--shadow-card:0 10px 40px rgba(0,0,0,0.3)}html{scroll-behavior:smooth}body{font-family:'Inter',sans-serif;background:var(--primary-bg);color:var(--text-primary);line-height:1.6;overflow-x:hidden}.bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-3;background:var(--primary-bg)}.bg-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 20% 50%,rgba(252,211,77,0.05) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(252,211,77,0.03) 0%,transparent 50%),radial-gradient(ellipse at 40% 80%,rgba(252,211,77,0.04) 0%,transparent 50%);pointer-events:none;z-index:-2;animation:bgShift 20s ease-in-out infinite}@keyframes bgShift{0%,100%{opacity:1}50%{opacity:0.7}}.bg-grid{position:fixed;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;animation:gridMove 25s linear infinite;pointer-events:none;z-index:-1}@keyframes gridMove{0%{transform:translate(0,0)}100%{transform:translate(60px,60px)}}.floating-particle{position:fixed;width:4px;height:4px;background:var(--accent-yellow);border-radius:50%;opacity:0.6;pointer-events:none;z-index:-1}.navbar{position:fixed;top:0;width:100%;background:rgba(11,15,25,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);z-index:1000;padding:1rem 0;transition:all 0.3s ease}.navbar.scrolled{background:rgba(11,15,25,0.95);box-shadow:0 2px 30px rgba(0,0,0,0.3)}.nav-container{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:0 2rem}.logo{display:flex;align-items:center;gap:0.5rem;text-decoration:none;color:var(--text-primary)}.logo img{width:40px;height:40px;object-fit:contain}.logo-text{font-size:1.5rem;font-weight:800;color:var(--accent-yellow);text-shadow:0 0 10px rgba(252,211,77,0.5)}.nav-menu{display:flex;list-style:none;gap:1.5rem}.nav-link{color:var(--text-secondary);text-decoration:none;font-weight:500;padding:0.5rem 0;position:relative;transition:all 0.3s ease;font-size:0.9rem}.nav-link::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--accent-yellow);transition:width 0.3s ease}.nav-link:hover,.nav-link.active{color:var(--text-primary);text-shadow:0 0 8px rgba(252,211,77,0.5)}.nav-link:hover::after,.nav-link.active::after{width:100%}.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px}.hamburger span{width:25px;height:3px;background:var(--text-primary);transition:all 0.3s ease}.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;padding:0 2rem}.hero-content{max-width:800px;z-index:2;animation:fadeInUp 1s ease-out}@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}.hero-logo{width:120px;height:120px;margin:2rem auto 1.5rem;background:linear-gradient(45deg,var(--accent-yellow),var(--accent-yellow-dark));border-radius:20px;display:flex;align-items:center;justify-content:center;animation:logoFloat 3s ease-in-out infinite;box-shadow:var(--shadow-glow)}@keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}.hero-title {
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(45deg, var(--text-primary), var(--accent-yellow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-subtitle{font-size:clamp(1.2rem,3vw,1.5rem);color:var(--accent-yellow);font-weight:600;margin-bottom:1rem;text-transform:uppercase;letter-spacing:2px}.hero-description{font-size:clamp(1rem,2.5vw,1.25rem);color:var(--text-secondary);margin-bottom:1rem;line-height:1.8}.cta-button{display:inline-block;padding:1rem 2.5rem;background:linear-gradient(45deg,var(--accent-yellow),var(--accent-yellow-dark));color:var(--primary-bg);text-decoration:none;border-radius:50px;font-weight:700;font-size:1.1rem;text-transform:uppercase;letter-spacing:1px;transition:all 0.3s ease;position:relative;overflow:hidden;box-shadow:var(--shadow-glow)}.cta-button::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);transition:left 0.6s}.cta-button:hover::before{left:100%}.cta-button:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(252,211,77,0.4)}.section{padding:5rem 2rem;max-width:1200px;margin:0 auto}.section-title{font-size:clamp(2.5rem,5vw,3.5rem);font-weight:800;text-align:center;margin-bottom:1rem;background:linear-gradient(45deg,var(--text-primary),var(--accent-yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.section-subtitle{text-align:center;color:var(--text-secondary);font-size:1.2rem;margin-bottom:3rem}.scrollable-container{overflow-x:auto;overflow-y:hidden;padding:1rem 0;margin:2rem 0}.scrollable-container::-webkit-scrollbar{height:8px}.scrollable-container::-webkit-scrollbar-track{background:var(--glass-bg);border-radius:10px}.scrollable-container::-webkit-scrollbar-thumb{background:var(--accent-yellow);border-radius:10px}.cards-row{display:flex;gap:1.5rem;min-width:fit-content;padding:0 1rem}.event-card,.gallery-card{min-width:300px;background:var(--glass-bg);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:20px;padding:2rem;transition:all 0.3s ease;cursor:pointer;box-shadow:var(--shadow-card)}.event-card::before,.gallery-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent-yellow),var(--accent-yellow-dark))}.event-card:hover,.gallery-card:hover{transform:translateY(-5px);border-color:var(--accent-yellow);box-shadow:0 15px 40px rgba(0,0,0,0.4),var(--shadow-glow)}.event-title,.gallery-title{font-size:1.3rem;font-weight:700;color:var(--accent-yellow);margin-bottom:1rem}.event-description{color:var(--text-secondary);line-height:1.6}.gallery-image{width:100%;height:150px;background:linear-gradient(45deg,var(--secondary-bg),var(--glass-bg));border-radius:10px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--accent-yellow)}.vp-card{max-width:400px;margin:0 auto 3rem;background:var(--glass-bg);backdrop-filter:blur(20px);border:2px solid var(--accent-yellow);border-radius:20px;padding:2rem;text-align:center;box-shadow:var(--shadow-glow)}.team-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;margin-top:2rem;padding:1rem}.team-card.highlight{border:2px solid var(--accent-yellow);box-shadow:0 0 25px var(--accent-yellow),0 0 10px var(--accent-yellow-dark);transform:scale(1.05);z-index:1}.team-card{background:var(--glass-bg);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:15px;padding:1.5rem;text-align:center;transition:all 0.3s ease;box-shadow:var(--shadow-card)}.team-card:hover{transform:translateY(-5px);border-color:var(--accent-yellow);box-shadow:0 10px 30px rgba(0,0,0,0.3)}.team-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(45deg,var(--accent-yellow),var(--accent-yellow-dark));margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--primary-bg);font-weight:800}.vp-card .team-avatar{width:120px;height:120px;font-size:3rem}.team-name{font-size:1.2rem;font-weight:700;color:var(--text-primary);margin-bottom:0.5rem}.team-role{color:var(--accent-yellow);font-weight:600;margin-bottom:1rem}.social-links{display:flex;justify-content:center;gap:1rem}.social-link{width:40px;height:40px;border-radius:50%;background:var(--glass-bg);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);text-decoration:none;transition:all 0.3s ease;font-size:1.2rem}.social-link:hover{background:var(--accent-yellow);color:var(--primary-bg);transform:translateY(-2px)}.motivation-content{max-width:800px;margin:0 auto;text-align:center;background:var(--glass-bg);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:20px;padding:3rem;box-shadow:var(--shadow-card)}.motivation-text{font-size:1.3rem;line-height:1.8;color:var(--text-secondary);font-style:italic}.gratitude-content{max-width:700px;margin:0 auto;background:var(--glass-bg);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:20px;padding:3rem;text-align:center;box-shadow:var(--shadow-card)}.gratitude-text{font-size:1.2rem;line-height:1.8;color:var(--text-secondary);margin-bottom:2rem}.hod-mention{font-weight:600;color:var(--accent-yellow)}.gratitude-card{display:flex;align-items:center;justify-content:center;gap:2rem;background:var(--glass-bg);padding:2rem;border-radius:20px;backdrop-filter:blur(20px);border:1px solid var(--glass-border);box-shadow:var(--shadow-card);margin:2rem 0;flex-wrap:wrap}.gratitude-image{max-width:300px;border-radius:12px;box-shadow:0 5px 20px rgba(0,0,0,0.2)}.gratitude-text-content{max-width:600px}.gratitude-text{color:var(--text-secondary);line-height:1.6;margin-bottom:1rem}.footer{background:var(--secondary-bg);padding:3rem 2rem 1rem;border-top:1px solid var(--glass-border);margin-top:5rem}.footer-content{max-width:1200px;margin:0 auto;text-align:center}.footer-logo{font-size:2rem;font-weight:800;color:var(--accent-yellow);margin-bottom:1rem;text-shadow:0 0 10px rgba(252,211,77,0.5)}.footer-text{color:var(--text-secondary);margin-bottom:1rem;font-size:1.1rem}.footer-college{color:var(--text-muted);font-size:0.9rem;margin-bottom:2rem}.footer-copyright{color:var(--text-muted);font-size:0.8rem;padding-top:2rem;border-top:1px solid var(--glass-border)}.fade-in{opacity:0;transform:translateY(30px);transition:all 0.6s ease}.fade-in.visible{opacity:1;transform:translateY(0)}.logo-wrapper{display:flex;justify-content:center;align-items:center;margin-bottom:10px}.logo-wrapper img{max-width:150px;height:auto;margin-top:20px}.auth-buttons{display:flex;gap:10px;margin-left:10px}.login-btn,.register-btn{padding:6px 14px;border:1px solid #f9ff8a;border-radius:6px;text-decoration:none;color:#dff154;font-weight:500;transition:0.3s ease;background-color:transparent}.login-btn:hover,.register-btn:hover{background-color:#edcb31;color:#111}.btn-meet-committee{display:inline-block;padding:20px 40px;font-size:1.4rem;font-weight:800;color:black;background:linear-gradient(135deg,#ffd700,#ffcc00);border:3px solid black;border-radius:50px;text-decoration:none;box-shadow:0 0 25px rgba(255,215,0,0.6),0 0 60px rgba(0,0,0,0.4);animation:pulseGlowYellow 2s infinite,floatY 3s ease-in-out infinite;text-align:center;transition:transform 0.3s ease,box-shadow 0.3s ease;position:relative;z-index:10;text-transform:uppercase;letter-spacing:1px;text-align:center;margin:40px 0}@keyframes pulseGlowYellow{0%,100%{box-shadow:0 0 25px rgba(255,215,0,0.6),0 0 60px rgba(0,0,0,0.4)}50%{box-shadow:0 0 35px rgba(255,215,0,0.9),0 0 90px rgba(0,0,0,0.7)}}@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}.event-title.live-event .live-badge{background:red;color:white;font-size:0.8rem;font-weight:bold;padding:3px 8px;border-radius:5px;margin-left:8px;animation:pulseColor 1.5s infinite,pulseGlow 1.5s infinite}@keyframes pulseGlow{0%{box-shadow:0 0 0 0 rgba(255,0,0,0.7)}70%{box-shadow:0 0 10px rgba(255,165,0,0.8),0 0 20px rgba(255,0,0,0.5)}100%{box-shadow:0 0 0 0 rgba(255,0,0,0)}}@keyframes pulseColor{0%{background:red}50%{background:orange}100%{background:red}}.coming-soon{background:red;color:white;font-size:0.8rem;font-weight:bold;padding:3px 8px;border-radius:5px;margin-left:8px;animation:pulseColorSoon 1.5s infinite,pulseGlowSoon 1.5s infinite}@keyframes pulseGlowSoon{0%{box-shadow:0 0 0 0 rgba(255,0,0,0.7)}70%{box-shadow:0 0 10px rgba(0,200,255,0.8),0 0 20px rgba(255,0,0,0.5)}100%{box-shadow:0 0 0 0 rgba(255,0,0,0)}}@keyframes pulseColorSoon{0%{background:red}50%{background:#00c8ff}100%{background:red}}.finished-badge{background:gray;color:white;font-size:0.8rem;font-weight:bold;padding:3px 8px;border-radius:5px;margin-left:8px;animation:fadeBadge 2s ease-in-out infinite;opacity:0.85}@keyframes fadeBadge{0%,100%{opacity:0.85}50%{opacity:0.5}}.gallery-image img{width:100%;height:180px;object-fit:cover;border-radius:12px;display:block}.finished-badge{background:#4caf50;color:#fff;padding:0.25rem 0.5rem;border-radius:6px;font-size:0.75rem;font-weight:bold}.coming-soon{background:linear-gradient(90deg,#ff7f50,#ff1493);color:#fff;padding:0.25rem 0.5rem;border-radius:6px;font-size:0.75rem;font-weight:bold;animation:pulseComingSoon 1.3s infinite alternate}@keyframes pulseComingSoon{0%{transform:scale(1);box-shadow:0 0 5px rgba(255,20,147,0.8)}100%{transform:scale(1.1);box-shadow:0 0 15px rgba(255,20,147,0.8)}}.gallery-card{position:relative;overflow:hidden}.gallery-card:hover{transform:translateY(-5px);transition:transform 0.3s ease}@media (max-width:768px){.nav-menu{position:fixed;top:80px;left:-100%;flex-direction:column;background:rgba(11,15,25,0.95);backdrop-filter:blur(20px);width:100%;padding:2rem;transition:left 0.3s ease;border-top:1px solid var(--glass-border)}.nav-menu.active{left:0}.hamburger{display:flex}.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}.hamburger.active span:nth-child(2){opacity:0}.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-6px)}.hero{padding:0 1rem}.section{padding:3rem 1rem}.team-grid{grid-template-columns:1fr}.cards-row{padding:0}.event-card,.gallery-card{min-width:280px}}@media (max-width:480px){.nav-container{padding:0 1rem}.hero-content{padding:0}.team-card,.vp-card{padding:1.5rem}.motivation-content,.gratitude-content{padding:2rem}}.hero-content,.fade-in,.event-card,.gallery-card,.team-card{will-change:transform,opacity}
+:root {
+  --background-dark: #0d0d0d;
+  --card-bg: #1a1a1a;
+  --accent-yellow:#FCD34D;
+  --text-light: #f0f0f0;
+  --text-muted: #aaaaaa;
+}
+
+body {
+  background-color: var(--background-dark);
+  color: var(--text-light);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.section {
+  padding: 3rem 1rem;
+}
+
+.section-title {
+  text-align: center;
+  color: var(--accent-yellow);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.team-card {
+  background-color: var(--card-bg);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  width: 200px; /* smaller width so more cards fit horizontally */
+  height : 300px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.team-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.team-avatar {
+  width: 100%;
+  height: 300px; /* Still large for image */
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  background-color: #000;
+}
+
+.team-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background-color: #000;
+}
+
+.team-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--accent-yellow);
+  margin-bottom: 0.2rem;
+}
+
+.team-role {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <canvas class="bg-canvas" id="bgCanvas"></canvas>
+    <div class="bg-overlay"></div>
+    <div class="bg-grid"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <a href="#home" class="logo">
+            <img src="ACES.png" alt="ACES Logo" loading="lazy" onerror="this.style.display='none'">
+            <span class="logo-text">ACES</span>
+        </a>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#home" class="nav-link active">Home</a></li>
+            <li><a href="#motivation" class="nav-link">About</a></li>
+            <li><a href="#gratitude" class="nav-link">Gratitude</a></li>
+            <li><a href="#events" class="nav-link">Events</a></li>
+            <li><a href="#gallery" class="nav-link">Gallery</a></li>
+            <li><a href="#team" class="nav-link">Our Team</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+        <!-- Login/Register Button -->
+        <div class="auth-buttons">
+            <a href="login.html" class="login-btn">Admin Login</a>
+        </div>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</nav>
+
+   <section class="hero" id="home">
+  <div class="hero-content">
+    
+    <!-- Logo (centered, slightly down) -->
+    <div class="logo-wrapper" style="margin-top: 5px; margin-bottom: -3rem; text-align: center;">
+  <img src="ACES.png" alt="ACES Logo" loading="lazy"
+       style="max-width: 100%; width: 300px; height: auto;" 
+       onerror="this.style.display='none'">
+</div>
+
+    <!-- Main Title -->
+    <h1 class="hero-title">Welcome to ACES</h1>
+
+    <!-- Subtitle -->
+    <p class="hero-subtitle">Department of Computer Engineering</p>
+
+    <!-- Description -->
+    <p class="hero-description">
+      Association of Computer Engineering Students<br>
+      Amrutvahini College of Engineering, Sangamner, Maharashtra 422608
+    </p>
+
+    <!-- CTA -->
+    <a href="#events" class="cta-button">Explore Events</a>
+  </div>
+</section>
+<!-- Motivation Section -->
+    <section class="section fade-in" id="motivation">
+        <h2 class="section-title">Why ACES?</h2>
+        
+        <div class="motivation-content">
+            <p class="motivation-text">
+               Because who wants a boring committee when you can join the Avengers of Computer Engineering? At ACES, we code like ninjas, debug like detectives, and celebrate like our code compiled on the first try. But we're not just tech we bring the same energy to sports fields, cultural stages, and every event that gets the campus buzzing. From hackathons to cricket matches, dance nights to debate battles, we run on teamwork, caffeine, and a healthy dose of friendly chaos. Whether it's winning trophies, launching crazy projects, or saving the day when the mic dies mid-performance we're basically the tech support, sports squad, event crew, and meme factory of AVCOE... all rolled into one legendary team.
+            </p>
+        </div>
+    </section>
+
+    <!-- Gratitude Section -->
+<section class="section fade-in" id="gratitude">
+  <h2 class="section-title">Gratitude</h2>
+  
+  <div class="gratitude-card">
+    <img src="Gratitude.jpg" alt="HOD Felicitation" class="gratitude-image" loading="lazy" />
+    
+    <div class="gratitude-text-content">
+      <p class="gratitude-text">
+    We express our deepest gratitude to <span class="hod-mention">Dr. S. K. Sonkar, Head of Department</span>, and <span class="hod-mention">Dr. G. D. Puri, ACES Coordinator</span> of the Department of Computer Engineering, Amrutvahini College of Engineering.
+</p>
+<p class="gratitude-text">
+    Their visionary leadership, constant encouragement, and dedicated mentorship have been the driving force behind ACES. With their guidance, we have been able to foster a culture of innovation, collaboration, and excellence, empowering students to grow not only as skilled engineers but as responsible professionals.
+</p>
+
+    </div>
+  </div>
+</section>
+
+    <!-- Events Section -->
+    <section class="section fade-in" id="events">
+        <h2 class="section-title">Events</h2>
+        <p class="section-subtitle">Discover our exciting lineup of technical, cultural, and sports events</p>
+        
+        <div class="scrollable-container">
+            <div class="cards-row">
+                <div class="event-card" onclick="window.open('Fevent.html', '_blank')">
+                    <h3 class="event-title">
+    Freshers Party 2025 <span class="finished-badge">FINISHED</span>
+</h3>
+<p class="event-description">
+    <p>31st July 2025</p> 
+    A warm and vibrant welcome to our newest batch of Computer Engineers! An evening filled with music, dance, games, and unforgettable memories celebrating the start of an exciting journey at AVCOE.
+</p>
+<strong>Mr. Fresher:</strong> Vedant Rahane 🎉  
+<strong>Miss Fresher:</strong> Pranjal Girase 👑
+
+                </div>
+                
+                <div class="event-card" onclick="window.open('events.html', '_blank')">
+                    <h3 class="event-title live-event">
+    Ganesh Chaturthi 2025 <span class="live-badge">LIVE</span>
+</h3>
+<p class="event-description">
+    <p></p>
+    Celebrate the auspicious occasion of Ganesh Chaturthi with ACES as we welcome Lord Ganesha in a grand and vibrant celebration. The event will feature traditional aartis, cultural performances, music, dance, and creative competitions bringing together devotion, art, and community spirit in one joyful celebration.
+</p>
+
+                </div>
+                
+                <div class="event-card" onclick="window.open('events.html', '_blank')">
+                   <h3 class="event-title">
+    Surprise Sports Event <span class="coming-soon">COMING SOON</span>
+</h3>
+<p class="event-description">
+    <p></p>
+    Something exciting is on the horizon! Get your game face ready a thrilling sports competition is coming soon. Stay tuned for the big reveal.
+</p>
+
+                </div>
+                
+            </div>
+        </div>
+    </section>
+<!-- Gallery Section -->
+  <section class="section fade-in" id="gallery">
+    <h2 class="section-title">Gallery</h2>
+    <p class="section-subtitle">Click an event to explore its photo gallery and relive the moments</p>
+    
+    <div class="scrollable-container">
+        <div class="cards-row">
+
+            <div class="gallery-card" onclick="window.open('GFreshers.html', '_blank')">
+                <div class="gallery-image">
+                    <img src="Freshers Thumbnail.jpg" alt="Freshers Party 2025 Thumbnail" loading="lazy">
+                </div>
+                <h3 class="gallery-title">Freshers Party 2025 <span class="finished-badge">FINISHED</span></h3>
+            </div>
+            
+            <div class="gallery-card" onclick="window.open('X.html', '_blank')">
+                <div class="gallery-image">
+                    <img src="Ganesh Chaturthi Thumbnail.png" alt="Ganesh Chaturthi 2025 Thumbnail" loading="lazy">
+                </div>
+                <h3 class="gallery-title">Ganesh Chaturthi 2025 <span class="coming-soon">SOON</span></h3>
+            </div>
+            
+            <div class="gallery-card" onclick="window.open('X.html', '_blank')">
+                <div class="gallery-image">
+                    <img src="Surprise Thumbnail.png" alt="Sports Meet Thumbnail" loading="lazy">
+                </div>
+                <h3 class="gallery-title">Surprise Event<span class="coming-soon">SOON</span></h3>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+    <!-- Our Team Section -->
+    <section class="section fade-in" id="team">
+          
+        <!-- Technical Team Grid -->
+        <h3 style="text-align: center; color: var(--accent-yellow); margin-bottom: 2rem; font-size: 1.5rem;">Technical Team</h3>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-avatar"><img src="TEAM_PAGE/kunalp.jpg"></div>
+                <h3 class="team-name">Kunal Pawar</h3>
+                <p class="team-role">Technical Member</p>
+                
+            </div>
+            
+            <div class="team-card">
+                <div class="team-avatar"><img src="TEAM_PAGE/Gayatri.png"></div>
+                <h3 class="team-name">  Gayatri Nawale</h3>
+                <p class="team-role">Event Manager</p>
+                
+            </div>
+           <div class="team-card highlight">
+    <div class="team-avatar"><img src="TEAM_PAGE/chaitanya.jpg"></div>
+    <h3 class="team-name">Chaitanya Patil</h3>
+    <p class="team-role">Event Manager</p>
+    
+</div>
+
+            
+            <div class="team-card">
+                <div class="team-avatar"><img src="TEAM_PAGE/Sakshi_Laware.jpg"></div>
+                <h3 class="team-name">Sakshi Laware</h3>
+                <p class="team-role">Web Developer</p>
+                
+            </div>
+            
+            <div class="team-card">
+                <div class="team-avatar"><img src="TEAM_PAGE/vedant.jpg"></div>
+                <h3 class="team-name">Vedant Tajane</h3>
+                <p class="team-role">Media Head</p>
+                
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 3rem;">
+
+</div>
+<a href="TEAM_PAGE/team.html" class="btn-meet-committee" style="display: block; text-align: center;"target ="_blank">Click here to Meet Our Committee</a>
+    </section>
+
+    
+  <!-- Footer -->
+<footer class="footer" id="contact" style="background:#111; color:#eee; padding: 40px 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+  <div class="footer-content" style="max-width: 900px; margin: 0 auto; text-align: center;">
+    <div class="footer-logo" style="font-size: 2.5rem; font-weight: 700; color: #f1c40f; margin-bottom: 10px;">ACES</div>
+    <p class="footer-text" style="font-size: 1.1rem; margin-bottom: 5px;">Association of Computer Engineering Students</p>
+    <p class="footer-college" style="font-size: 0.9rem; color: #ccc; margin-bottom: 25px;">
+      Department of Computer Engineering<br>
+      Amrutvahini College of Engineering, Sangamner, Maharashtra
+    </p>
+
+    <div class="footer-contact" style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; font-size: 1rem;">
+      <div class="contact-item" style="display: flex; align-items: center; gap: 8px;">
+        📧 <a href="mailto:aces.techie@gmail.com" style="color: #f1c40f; text-decoration: none;">aces.techie@gmail.com</a>
+      </div>
+      <div class="contact-item" style="display: flex; align-items: center; gap: 8px;">
+        📸 <a href="https://www.instagram.com/aces_avcoe" target="_blank" style="color: #f1c40f; text-decoration: none;">@aces_avcoe</a>
+      </div>
+      <div class="contact-item" style="display: flex; align-items: center; gap: 8px;">
+        🔗 <a href="https://www.linkedin.com/company/association-of-computer-engineering-student-aces-avcoe/" target="_blank" style="color: #f1c40f; text-decoration: none;">LinkedIn</a>
+      </div>
+    </div>
+
+    <div class="footer-copyright" style="margin-top: 30px; font-size: 0.85rem; color: #666;">
+      © 2025 ACES. All rights reserved. | Designed with passion for innovation.
+    </div>
+  </div>
+</footer>
+
+
+    <script defer>
+        // Debounce function for performance
+        function debounce(func, wait = 20, immediate = true) {
+            let timeout;
+            return function() {
+                const context = this, args = arguments;
+                const later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                const callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        }
+
+        // Mobile Menu Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+        
+        // Scrollable cards container
+        const container = document.querySelector('.scrollable-container');
+        const cards = document.querySelectorAll('.event-card');
+
+        function updateCenterCard() {
+            let centerX = container.scrollLeft + container.offsetWidth / 2;
+
+            cards.forEach(card => {
+                const cardX = card.offsetLeft + card.offsetWidth / 2;
+                const distance = Math.abs(centerX - cardX);
+                card.classList.toggle('center', distance < card.offsetWidth / 2);
+            });
+        }
+
+        // Navbar scroll effect and active link highlighting
+        function handleScroll() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Active navigation highlighting
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', debounce(handleScroll));
+
+        // Smooth scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Dynamic Canvas Background
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationId;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function createParticle() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 3 + 1,
+                speedX: (Math.random() - 0.5) * 0.5,
+                speedY: (Math.random() - 0.5) * 0.5,
+                opacity: Math.random() * 0.5 + 0.2,
+                life: Math.random() * 100 + 50
+            };
+        }
+
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.min(30, Math.floor(canvas.width / 30));
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(createParticle());
+            }
+        }
+
+        function updateParticles() {
+            particles.forEach((particle, index) => {
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+                particle.life--;
+                particle.opacity = particle.life / 100;
+
+                // Wrap around screen
+                if (particle.x > canvas.width) particle.x = 0;
+                if (particle.x < 0) particle.x = canvas.width;
+                if (particle.y > canvas.height) particle.y = 0;
+                if (particle.y < 0) particle.y = canvas.height;
+
+                // Remove dead particles
+                if (particle.life <= 0) {
+                    particles[index] = createParticle();
+                }
+            });
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(252, 211, 77, ${particle.opacity})`;
+                ctx.fill();
+                
+                // Add glow effect
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = 'rgba(252, 211, 77, 0.5)';
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+
+            // Draw connections
+            particles.forEach((particle, i) => {
+                particles.slice(i + 1).forEach(otherParticle => {
+                    const distance = Math.sqrt(
+                        Math.pow(particle.x - otherParticle.x, 2) +
+                        Math.pow(particle.y - otherParticle.y, 2)
+                    );
+                    
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particle.x, particle.y);
+                        ctx.lineTo(otherParticle.x, otherParticle.y);
+                        ctx.strokeStyle = `rgba(252, 211, 77, ${0.1 * (1 - distance / 100)})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                });
+            });
+        }
+
+        function animate() {
+            updateParticles();
+            drawParticles();
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // Initialize canvas
+        resizeCanvas();
+        initParticles();
+        animate();
+
+        // Handle window resize
+        function handleResize() {
+            resizeCanvas();
+            initParticles();
+        }
+        window.addEventListener('resize', debounce(handleResize));
+
+        // Performance optimization: Pause animations when tab is not visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                cancelAnimationFrame(animationId);
+            } else {
+                animate();
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add entrance animation to hero
+            setTimeout(() => {
+                document.querySelector('.hero-content').style.animation = 'fadeInUp 1s ease-out';
+            }, 500);
+        });
+
+        // Loading animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+            console.log('🚀 ACES Website Loaded Successfully!');
+        });
+
+        // Set initial body opacity for smooth loading
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 0.5s ease';
+    </script>
+</body>
+</html>

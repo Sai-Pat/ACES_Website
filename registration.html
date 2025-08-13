@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ACES Registration</title>
+  <!-- Enhanced Fonts -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+
+<!-- Firebase Auth -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+<!-- Firebase Firestore -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<!-- Firebase Storage (if needed) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+<!-- Your Firebase config -->
+<script src="./firebase-config.js"></script>
+
+
+  <style>
+    :root {
+      --dark-bg: #0a0a0a;
+      --card-bg: rgba(15, 15, 15, 0.95);
+      --main-text: #e8e8e8;
+      --accent-yellow: #f1cd3a;
+      --soft-yellow: #f8e473;
+      --bright-yellow: #ffd700;
+      --input-bg: #1a1a1a;
+      --input-focus-bg: #222;
+      --border-color: #333;
+      --border-focus: #f1cd3a;
+      --highlight: #f1cd3a;
+      --shadow-glow: rgba(241, 205, 58, 0.15);
+      --error-color: #ff4757;
+      --success-color: #2ed573;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--dark-bg) 0%, #111 50%, var(--dark-bg) 100%);
+      font-family: 'Poppins', sans-serif;
+      color: var(--main-text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Enhanced background effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(241, 205, 58, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 60%, rgba(248, 228, 115, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+      animation: backgroundPulse 15s ease-in-out infinite;
+    }
+
+    @keyframes backgroundPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Particles Canvas */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Enhanced Container */
+    .container {
+      max-width: 580px;
+      margin: 4rem auto 3rem auto;
+      padding: 3rem 2.5rem;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid rgba(241, 205, 58, 0.2);
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(241, 205, 58, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      position: relative;
+      animation: containerSlideIn 1s ease-out;
+    }
+
+    @keyframes containerSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Animated border glow */
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, var(--accent-yellow), transparent, var(--bright-yellow), transparent, var(--accent-yellow));
+      background-size: 400% 400%;
+      border-radius: 22px;
+      z-index: -1;
+      opacity: 0.3;
+      animation: borderFlow 4s ease-in-out infinite;
+    }
+
+    @keyframes borderFlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Enhanced Title */
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      background: linear-gradient(135deg, var(--accent-yellow), var(--bright-yellow), var(--soft-yellow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      position: relative;
+      animation: titleGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes titleGlow {
+      from { filter: drop-shadow(0 0 10px rgba(241, 205, 58, 0.5)); }
+      to { filter: drop-shadow(0 0 20px rgba(241, 205, 58, 0.8)); }
+    }
+
+    /* Enhanced Form Elements */
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+      animation: formGroupSlide 0.6s ease-out forwards;
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.2s; }
+    .form-group:nth-child(3) { animation-delay: 0.3s; }
+    .form-group:nth-child(4) { animation-delay: 0.4s; }
+    .form-group:nth-child(5) { animation-delay: 0.5s; }
+    .form-group:nth-child(6) { animation-delay: 0.6s; }
+
+    @keyframes formGroupSlide {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+      color: var(--accent-yellow);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+    }
+
+    label::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent-yellow);
+      transition: width 0.3s ease;
+    }
+
+    .form-group:focus-within label::after {
+      width: 100%;
+    }
+
+    /* Enhanced Input Styles */
+    input, select {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--input-bg);
+      color: var(--main-text);
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      background: var(--input-focus-bg);
+      box-shadow: 
+        0 0 0 3px rgba(241, 205, 58, 0.1),
+        0 8px 25px rgba(241, 205, 58, 0.15);
+      transform: translateY(-2px);
+    }
+
+    input::placeholder {
+      color: rgba(241, 205, 58, 0.6);
+      font-style: italic;
+    }
+
+    select option {
+      background: var(--input-bg);
+      color: var(--main-text);
+      padding: 0.5rem;
+    }
+
+    /* Enhanced Toggle Switches */
+    .toggle-switch {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin: 0.5rem 0 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .toggle-switch input[type="radio"] {
+      display: none;
+    }
+
+    .toggle-switch label {
+      background: linear-gradient(135deg, #111, #1a1a1a);
+      border: 2px solid var(--accent-yellow);
+      color: var(--accent-yellow);
+      padding: 12px 24px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .toggle-switch label::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(241, 205, 58, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .toggle-switch label:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(241, 205, 58, 0.2);
+    }
+
+    .toggle-switch label:hover::before {
+      left: 100%;
+    }
+
+    .toggle-switch input[type="radio"]:checked + label {
+      background: linear-gradient(135deg, var(--accent-yellow), var(--soft-yellow));
+      color: #000;
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(241, 205, 58, 0.4);
+    }
+
+    /* Enhanced Submit Button */
+    button {
+      width: 100%;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, var(--accent-yellow), var(--soft-yellow));
+      color: #000;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-top: 2rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.6s;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, var(--soft-yellow), var(--bright-yellow));
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(241, 205, 58, 0.4);
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:active {
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Enhanced Footer */
+    .footer {
+      text-align: center;
+      font-size: 0.85rem;
+      margin-top: 2.5rem;
+      color: #888;
+      font-weight: 300;
+      position: relative;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-yellow), transparent);
+    }
+
+    /* Loading Animation */
+    .loading {
+      position: relative;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top: 2px solid #000;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    /* Success/Error Messages */
+    .message {
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      font-weight: 500;
+      text-align: center;
+      animation: messageSlide 0.5s ease-out;
+    }
+
+    .message.success {
+      background: rgba(46, 213, 115, 0.1);
+      border: 1px solid var(--success-color);
+      color: var(--success-color);
+    }
+
+    .message.error {
+      background: rgba(255, 71, 87, 0.1);
+      border: 1px solid var(--error-color);
+      color: var(--error-color);
+    }
+
+    @keyframes messageSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 600px) {
+      .container {
+        margin: 2rem 1rem;
+        padding: 2rem 1.5rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+        letter-spacing: 1px;
+      }
+
+      .toggle-switch {
+        gap: 0.5rem;
+      }
+
+      .toggle-switch label {
+        padding: 10px 18px;
+        font-size: 0.8rem;
+        min-width: 50px;
+      }
+
+      input, select {
+        padding: 0.9rem 1rem;
+      }
+
+      button {
+        padding: 1rem;
+        font-size: 1rem;
+        letter-spacing: 1px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .container {
+        margin: 1.5rem 0.8rem;
+        padding: 1.5rem 1.2rem;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .toggle-switch {
+        gap: 0.4rem;
+      }
+
+      .toggle-switch label {
+        padding: 8px 15px;
+        font-size: 0.75rem;
+      }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--accent-yellow), var(--soft-yellow));
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, var(--soft-yellow), var(--bright-yellow));
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particles-canvas"></canvas>
+<div class="logo-wrapper" style="margin-top: 5px; margin-bottom: -3rem; text-align: center;">
+  <img src="ACES.png" alt="ACES Logo"
+       style="max-width: 100%; width: 300px; height: auto;" 
+       onerror="this.style.display='none'">
+</div>
+
+<div class="container">
+  <h1>ACES Student Registration</h1>
+  <div id="messageContainer"></div>
+
+  <form id="registrationForm">
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" name="fullName" placeholder="Enter your complete name" required />
+    </div>
+
+    <div class="form-group">
+      <label for="rollNumber">Roll Number</label>
+      <input type="text" id="rollNumber" name="rollNumber" placeholder="Chutiya he ka " required />
+    </div>
+
+    <div class="form-group">
+      <label>Class</label>
+      <div class="toggle-switch">
+        <input type="radio" id="se" name="classYear" value="SE" required />
+        <label for="se">SE</label>
+        <input type="radio" id="te" name="classYear" value="TE" />
+        <label for="te">TE</label>
+        <input type="radio" id="be" name="classYear" value="BE" />
+        <label for="be">BE</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Division</label>
+      <div class="toggle-switch">
+        <input type="radio" id="divisionA" name="division" value="A" required />
+        <label for="divisionA">A</label>
+        <input type="radio" id="divisionB" name="division" value="B" />
+        <label for="divisionB">B</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="department">Department</label>
+      <select id="department" name="department" required>
+        <option value="" disabled selected>Select Department</option>
+        <option value="Computer">Computer Engineering</option>
+        <option value="IT">Information Technology</option>
+        <option value="ENTC">Electronics & Telecommunication</option>
+        <option value="Mechanical">Mechanical Engineering</option>
+        <option value="Civil">Civil Engineering</option>
+        <option value="Electrical">Electrical Engineering</option>
+        <option value="AI&DS">AI & Data Science</option>
+        <option value="Instrumentation">Instrumentation</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email ID</label>
+      <input type="email" id="email" name="email" placeholder="that ends with @gmail.com" required />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Set Password</label>
+      <input type="password" id="password" name="password" required />
+    </div>
+
+    <div class="form-group">
+      <button type="submit" id="submitBtn">Register Now</button>
+    </div>
+  </form>
+
+  <div class="footer">Powered by ACES • AVCOE</div>
+</div>
+
+<script>
+
+  const form = document.getElementById('registrationForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const messageContainer = document.getElementById('messageContainer');
+
+  function showMessage(text, type) {
+    messageContainer.innerHTML = `<div class="message ${type}">${text}</div>`;
+    setTimeout(() => messageContainer.innerHTML = '', 5000);
+  }
+
+  function validateEmail(email) {
+    return email.endsWith('@gmail.com');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const fullName = form.fullName.value.trim();
+    const rollNumber = form.rollNumber.value;
+    const classYear = form.classYear.value;
+    const division = form.division.value;
+    const department = form.department.value;
+    const email = form.email.value.trim();
+    const password = form.password.value;
+
+    if (!validateEmail(email)) {
+      showMessage('Email must end with @gmail.com', 'error');
+      return;
+    }
+
+    try {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Registering...';
+
+      // ✅ Step 1: Register user in Firebase Authentication
+      const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+
+      // ✅ Step 2: Save extra data in Firestore
+      await firebase.firestore().collection('students').doc(user.uid).set({
+        fullName,
+        rollNumber,
+        classYear,
+        division,
+        department,
+        email,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      showMessage('Registration successful! 🎉', 'success');
+      form.reset();
+      setTimeout(() => window.location.href = 'student.html', 1000);
+    } catch (err) {
+      console.error(err);
+      if (err.code === 'auth/email-already-in-use') {
+        showMessage('Email is already registered.', 'error');
+      } else if (err.code === 'auth/weak-password') {
+        showMessage('Password should be at least 6 characters.', 'error');
+      } else {
+        showMessage('Error occurred. Try again later.', 'error');
+      }
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Register Now';
+    }
+  });
+</script>
+
+
+<!-- particles background stays unchanged -->
+<script>
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let mouse = { x: 0, y: 0 };
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  document.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  function createParticles(count) {
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 6 + 2,
+        speedY: Math.random() * 0.3 + 0.2,
+        speedX: (Math.random() - 0.5) * 0.5,
+        opacity: Math.random() * 0.4 + 0.2,
+        color: `hsl(${45 + Math.random() * 15}, 85%, 65%)`,
+        pulse: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let p of particles) {
+      const dx = mouse.x - p.x;
+      const dy = mouse.y - p.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < 150) {
+        const force = (150 - distance) / 150;
+        p.x -= dx * force * 0.01;
+        p.y -= dy * force * 0.01;
+      }
+
+      p.pulse += 0.02;
+      const pulsedRadius = p.radius + Math.sin(p.pulse) * 0.5;
+      const pulsedOpacity = p.opacity + Math.sin(p.pulse) * 0.1;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, pulsedRadius, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${45}, 100%, 60%, ${pulsedOpacity})`;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = p.color;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      p.y += p.speedY;
+      p.x += p.speedX;
+
+      if (p.y > canvas.height + 10) p.y = -10;
+      if (p.x > canvas.width + 10) p.x = -10;
+      if (p.x < -10) p.x = canvas.width + 10;
+    }
+    requestAnimationFrame(animateParticles);
+  }
+
+  createParticles(120);
+  animateParticles();
+</script>
+
+</body>
+</html>
