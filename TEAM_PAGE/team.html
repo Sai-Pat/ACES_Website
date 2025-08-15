@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ACES Team - Engineering the Future</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -18,6 +18,7 @@
             color: #ffffff;
             overflow-x: hidden;
             line-height: 1.6;
+            -webkit-text-size-adjust: 100%;
         }
 
         /* Animated Background */
@@ -58,44 +59,37 @@
             100% { transform: translate(50px, 50px); }
         }
 
-
-
-
-
         /* Hero Section */
         .hero {
-
-   /* or a specific width if needed */
-
-    background-image: url('committee.jpg');
-    background-position: center;
-    
-    background-size: cover; /* or 'contain', depending on your desired effect */
-
-    text-align: center;
-    position: relative;
-    padding:250px;
-    
-
-
+            background-image: url('committee.jpg');
+            background-position: center;
+            background-size: cover;
+            text-align: center;
+            position: relative;
+            padding: 120px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .hero-content {
-           
-            
+            max-width: 100%;
+            padding: 0 15px;
         }
 
         .hero h1 {
             font-family: 'Orbitron', monospace;
-            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-size: clamp(2rem, 8vw, 3.5rem);
             font-weight: 900;
-            
+            margin-bottom: 20px;
             background: linear-gradient(45deg, #00ffff, #8a2be2, #00bfff);
             background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: gradient-shift 3s ease infinite;
+            line-height: 1.2;
         }
 
         @keyframes gradient-shift {
@@ -104,29 +98,29 @@
         }
 
         .hero p {
-            font-size: 1.2rem;
-           
+            font-size: 1rem;
             opacity: 0.9;
             line-height: 1.8;
+            margin-bottom: 30px;
         }
 
-.cta-button {
-    display: block;
-    padding: 15px;
-    background: linear-gradient(45deg, #00ffff, #8a2be2);
-    border: none;
-    border-radius: 30px;
-    color: #0a0a0a;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
-    margin: 0 auto; /* Center horizontally */
-    overflow: hidden;
-    margin-bottom: 30px;
-    width: fit-content; /* Prevent full-width stretch */
-}
-
+        .cta-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #00ffff, #8a2be2);
+            border: none;
+            border-radius: 30px;
+            color: #0a0a0a;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+            margin: 0 auto 30px;
+            width: auto;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
 
         .cta-button:hover {
             transform: translateY(-3px);
@@ -150,16 +144,16 @@
 
         /* Section Styling */
         .section {
-            padding: 80px 2rem;
+            padding: 50px 15px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .section-title {
             font-family: 'Orbitron', monospace;
-            font-size: 2.5rem;
+            font-size: clamp(1.8rem, 6vw, 2.5rem);
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             position: relative;
         }
 
@@ -169,7 +163,7 @@
             bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
+            width: 80px;
             height: 3px;
             background: linear-gradient(45deg, #00ffff, #8a2be2);
             border-radius: 2px;
@@ -178,8 +172,8 @@
         /* Team Cards */
         .team-grid {
             display: grid;
-            gap: 2rem;
-            margin-bottom: 4rem;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
         }
 
         .hero-member {
@@ -187,13 +181,14 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            padding: 3rem;
+            padding: 2rem 1rem;
             background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(138, 43, 226, 0.1));
-            border-radius: 20px;
+            border-radius: 15px;
             border: 1px solid rgba(0, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
+            width: 100%;
         }
 
         .hero-member::before {
@@ -215,19 +210,20 @@
 
         .member-card {
             background: rgba(20, 20, 20, 0.8);
-            border-radius: 15px;
-            padding: 2rem;
+            border-radius: 12px;
+            padding: 1.5rem;
             text-align: center;
             transition: all 0.3s ease;
             border: 1px solid rgba(0, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
+            width: 100%;
+            margin: 0 auto;
         }
 
-
         .member-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.2);
             border-color: rgba(0, 255, 255, 0.5);
         }
 
@@ -247,15 +243,15 @@
         }
 
         .member-photo {
-            width: 200px;
-            height: 250px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 1rem;
             background: linear-gradient(45deg, #00ffff, #8a2be2);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #0a0a0a;
             position: relative;
@@ -269,18 +265,18 @@
         }
 
         .hero-member .member-photo {
-            width: 250px;
-            height: 250px;
-            font-size: 2.5rem;
+            width: 180px;
+            height: 180px;
+            font-size: 2rem;
         }
 
         .member-photo::before {
             content: '';
             position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
             border-radius: 50%;
             background: linear-gradient(45deg, #00ffff, #8a2be2, #00bfff);
             z-index: -1;
@@ -294,25 +290,26 @@
 
         .member-name {
             font-family: 'Orbitron', monospace;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: #00ffff;
         }
 
         .hero-member .member-name {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
         }
 
         .member-role {
             color: #8a2be2;
             font-weight: 500;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
         }
 
         .member-badge {
             display: inline-block;
-            padding: 0.3rem 1rem;
+            padding: 0.2rem 0.8rem;
             background: linear-gradient(45deg, rgba(0, 255, 255, 0.2), rgba(138, 43, 226, 0.2));
             border-radius: 20px;
             font-size: 0.8rem;
@@ -323,36 +320,35 @@
         /* Grid Layouts */
         .leadership-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .executive-row {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .team-section {
-            margin-bottom: 4rem;
+            margin-bottom: 3rem;
         }
 
         .team-section h3 {
             font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
             text-align: center;
             color: #00bfff;
         }
 
         .team-members {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
         }
-        
 
         .special-highlight {
             position: relative;
@@ -363,7 +359,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             animation: spark 2s ease-in-out infinite;
         }
 
@@ -375,56 +371,90 @@
         /* Footer */
         .footer {
             background: rgba(10, 10, 10, 0.95);
-            padding: 3rem 2rem 2rem;
+            padding: 2rem 15px;
             text-align: center;
             border-top: 1px solid rgba(0, 255, 255, 0.2);
         }
 
         .footer-quote {
             font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-style: italic;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             background: linear-gradient(45deg, #00ffff, #8a2be2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            line-height: 1.5;
         }
 
         .footer-info {
             opacity: 0.7;
             margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav {
-                padding: 1rem;
+        @media (min-width: 480px) {
+            .member-photo {
+                width: 160px;
+                height: 160px;
             }
-
-            .hero {
-                padding: 1rem;
-                min-height: 90vh;
+            
+            .hero-member .member-photo {
+                width: 200px;
+                height: 200px;
             }
+        }
 
-            .section {
-                padding: 60px 1rem;
-            }
-
-            .leadership-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .executive-row {
-                grid-template-columns: 1fr;
-            }
-
+        @media (min-width: 600px) {
             .team-members {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
-
+            
+            .executive-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
             .member-card {
-                padding: 1.5rem;
+                padding: 1.8rem;
+            }
+            
+            .hero {
+                padding: 150px 30px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .section {
+                padding: 70px 30px;
+            }
+            
+            .team-members {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .leadership-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+            
+            .member-card {
+                padding: 2rem;
+            }
+            
+            .hero-member {
+                padding: 2.5rem;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .team-members {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            
+            .hero {
+                padding: 200px 50px;
             }
         }
 
@@ -436,7 +466,7 @@
         /* Animation on scroll */
         .fade-in {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
             transition: all 0.6s ease;
         }
 
@@ -445,26 +475,35 @@
             transform: translateY(0);
         }
         
+        /* Touch optimization */
+        button, .cta-button, .member-card {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        
+        /* Prevent zoom on input */
+        input, select, textarea {
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
-
+    <div class="matrix-bg"></div>
 
     <section class="hero">
         <div class="hero-content">
-            <h1></h1>
-            <p></p>
-            
+            <h1 class="fade-in">ACES TEAM</h1>
+            <p class="fade-in">Engineering the Future with Innovation and Excellence</p>
+            <a href="#team" class="cta-button fade-in">Explore the Team</a>
         </div>
     </section>
 
     <section id="team" class="section">
-        <a href="#team" class="cta-button">Explore the Team</a>
         <h2 class="section-title fade-in">Leadership Hierarchy</h2>
         
         <!-- President & HOD -->
         <div class="hero-member fade-in">
-            <div class="member-photo"><img src="https://via.placeholder.com/150" alt="Dr. S.K. Sonkar"></div>
+            <div class="member-photo"><img src="z.png" alt="Dr. S.K. Sonkar"></div>
             <h3 class="member-name">Dr. S.K. Sonkar</h3>
             <p class="member-role">Head of Department</p>
             <span class="member-badge">President</span>
@@ -472,7 +511,7 @@
 
         <!-- ACES Coordinator -->
         <div class="hero-member fade-in">
-            <div class="member-photo"><img src="https://via.placeholder.com/150" alt="Dr. G.D. Puri"></div>
+            <div class="member-photo"><img src="p.png" alt="Dr. G.D. Puri"></div>
             <h3 class="member-name">Dr. G.D. Puri</h3>
             <p class="member-role">Vice Head of Department</p>
             <span class="member-badge">Faculty Coordinator</span>
@@ -482,24 +521,24 @@
         <div class="fade-in">
             <!-- Vice President and Secretary in one row -->
              <div class="hero-member fade-in">
-            <div class="member-photo"><img src="shantanu.jpg" alt="Shantanu Wagh"></div>
-            <h3 class="member-name">Shantanu Wagh</h3>
+                <div class="member-photo"><img src="shantanu.jpg" alt="Shantanu Wagh"></div>
+                <h3 class="member-name">Shantanu Wagh</h3>
+                <span class="member-badge">Vice President</span>
+            </div>
             
-            <span class="member-badge">Vice President</span>
-        </div>
             <!-- Treasurers in one row -->
             <div class="executive-row">
                 <div class="member-card">
                     <div class="member-photo"><img src="krushna.jpg" alt="Krushna Pokale"></div>
                     <h3 class="member-name">Krushna Pokale</h3>
-                    <p class="member-role">Treasurer</p>
-                    <span class="member-badge">Executive</span>
+                    
+                    <span class="member-badge">Treasurer</span>
                 </div>
                 <div class="member-card">
                     <div class="member-photo"><img src="dyanesh.jpg" alt="Dyanesh Sonwane"></div>
                     <h3 class="member-name">Dyanesh Sonwane</h3>
-                    <p class="member-role">Treasurer</p>
-                    <span class="member-badge">Executive</span>
+                    
+                    <span class="member-badge">Treasurer</span>
                 </div>
             </div>
         </div>
@@ -528,7 +567,6 @@
                 <div class="member-card special-highlight">
                     <div class="member-photo"><img src="chaitanya.png" alt="Chaitanya Patil"></div>
                     <h3 class="member-name">Chaitanya Patil</h3>
-                   
                     <span class="member-badge">Technical Team Lead</span>
                 </div>
                 <div class="member-card">
@@ -608,7 +646,7 @@
                     <p class="member-role">Discipline Coordinator</p>
                 </div>
                 <div class="member-card">
-                    <div class="member-photo"><img src="mayur.jpg" alt="Prajwal Godase"></div>
+                    <div class="member-photo"><img src="mayur.jpg" alt="Mayur Ranmale"></div>
                     <h3 class="member-name">Mayur Ranmale</h3>
                     <p class="member-role">Discipline Coordinator</p>
                 </div>
@@ -663,13 +701,13 @@
                     <h3 class="member-name">Jay Kale</h3>
                     <p class="member-role">Social Media Manager</p>
                 </div>
-            </div>
-            <div class="member-card">
+                <div class="member-card">
                     <div class="member-photo"><img src="aaditya.jpg" alt="Aditya Joshi"></div>
                     <h3 class="member-name">Aditya Joshi</h3>
                     <p class="member-role">Secretary</p>
                     <span class="member-badge">Executive</span>
                 </div>
+            </div>
         </div>
     </section>
 
@@ -715,26 +753,26 @@
             observer.observe(el);
         });
 
-        // Add hover sound effect (visual feedback)
-        document.querySelectorAll('.member-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-10px) scale(1.02)';
-            });
+        // Touch feedback for mobile
+        document.querySelectorAll('.member-card, .cta-button').forEach(el => {
+            el.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.98)';
+            }, {passive: true});
             
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
-            });
+            el.addEventListener('touchend', function() {
+                this.style.transform = '';
+            }, {passive: true});
         });
 
         // Dynamic grid adjustment
         function adjustGrid() {
             const cards = document.querySelectorAll('.member-card');
+            const screenWidth = window.innerWidth;
+            
             cards.forEach(card => {
-                if (window.innerWidth < 768) {
-                    card.style.margin = '0 auto 1rem';
-                    card.style.maxWidth = '300px';
+                if (screenWidth < 600) {
+                    card.style.maxWidth = '100%';
                 } else {
-                    card.style.margin = '';
                     card.style.maxWidth = '';
                 }
             });
@@ -742,6 +780,19 @@
 
         window.addEventListener('resize', adjustGrid);
         adjustGrid(); // Call on initial load
+        
+        // Prevent zoom on double-tap
+        document.addEventListener('dblclick', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+        
+        // Better touch handling for iOS
+        document.addEventListener('touchmove', function(e) {
+    if (e.scale && e.scale !== 1) {
+        e.preventDefault(); // Only block pinch zoom
+    }
+}, { passive: false });
+
     </script>
 </body>
 </html>
