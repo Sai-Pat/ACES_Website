@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACES - Association of Computer Engineering Students</title>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap"></noscript>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}:root{--primary-bg:#0B0F19;--secondary-bg:#1A1F2E;--accent-yellow:#FCD34D;--accent-yellow-dark:#F59E0B;--text-primary:#FFFFFF;--text-secondary:#9CA3AF;--text-muted:#6B7280;--glass-bg:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.1);--shadow-glow:0 0 30px rgba(252,211,77,0.3);--shadow-card:0 10px 40px rgba(0,0,0,0.3)}html{scroll-behavior:smooth}body{font-family:'Inter',sans-serif;background:var(--primary-bg);color:var(--text-primary);line-height:1.6;overflow-x:hidden}.bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-3;background:var(--primary-bg)}.bg-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 20% 50%,rgba(252,211,77,0.05) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(252,211,77,0.03) 0%,transparent 50%),radial-gradient(ellipse at 40% 80%,rgba(252,211,77,0.04) 0%,transparent 50%);pointer-events:none;z-index:-2;animation:bgShift 20s ease-in-out infinite}@keyframes bgShift{0%,100%{opacity:1}50%{opacity:0.7}}.bg-grid{position:fixed;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;animation:gridMove 25s linear infinite;pointer-events:none;z-index:-1}@keyframes gridMove{0%{transform:translate(0,0)}100%{transform:translate(60px,60px)}}.floating-particle{position:fixed;width:4px;height:4px;background:var(--accent-yellow);border-radius:50%;opacity:0.6;pointer-events:none;z-index:-1}.navbar{position:fixed;top:0;width:100%;background:rgba(11,15,25,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);z-index:1000;padding:1rem 0;transition:all 0.3s ease}.navbar.scrolled{background:rgba(11,15,25,0.95);box-shadow:0 2px 30px rgba(0,0,0,0.3)}.nav-container{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:0 2rem}.logo{display:flex;align-items:center;gap:0.5rem;text-decoration:none;color:var(--text-primary)}.logo img{width:40px;height:40px;object-fit:contain}.logo-text{font-size:1.5rem;font-weight:800;color:var(--accent-yellow);text-shadow:0 0 10px rgba(252,211,77,0.5)}.nav-menu{display:flex;list-style:none;gap:1.5rem}.nav-link{color:var(--text-secondary);text-decoration:none;font-weight:500;padding:0.5rem 0;position:relative;transition:all 0.3s ease;font-size:0.9rem}.nav-link::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--accent-yellow);transition:width 0.3s ease}.nav-link:hover,.nav-link.active{color:var(--text-primary);text-shadow:0 0 8px rgba(252,211,77,0.5)}.nav-link:hover::after,.nav-link.active::after{width:100%}.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px}.hamburger span{width:25px;height:3px;background:var(--text-primary);transition:all 0.3s ease}.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;padding:0 2rem}.hero-content{max-width:800px;z-index:2;animation:fadeInUp 1s ease-out}@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}.hero-logo{width:120px;height:120px;margin:2rem auto 1.5rem;background:linear-gradient(45deg,var(--accent-yellow),var(--accent-yellow-dark));border-radius:20px;display:flex;align-items:center;justify-content:center;animation:logoFloat 3s ease-in-out infinite;box-shadow:var(--shadow-glow)}@keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}.hero-title {
@@ -291,11 +293,14 @@ body {
         📧 <a href="mailto:aces.techie@gmail.com" style="color: #f1c40f; text-decoration: none;">aces.techie@gmail.com</a>
       </div>
       <div class="contact-item" style="display: flex; align-items: center; gap: 8px;">
-        📸 <a href="https://www.instagram.com/aces_avcoe" target="_blank" style="color: #f1c40f; text-decoration: none;">@aces_avcoe</a>
-      </div>
-      <div class="contact-item" style="display: flex; align-items: center; gap: 8px;">
-        🔗 <a href="https://www.linkedin.com/company/association-of-computer-engineering-student-aces-avcoe/" target="_blank" style="color: #f1c40f; text-decoration: none;">LinkedIn</a>
-      </div>
+  <i class="fab fa-instagram" style="color: #f1c40f;"></i>
+  <a href="https://www.instagram.com/aces_avcoe" target="_blank" style="color: #f1c40f; text-decoration: none;">@aces_avcoe</a>
+</div>
+
+<div class="contact-item" style="display: flex; align-items: center; gap: 8px;">
+  <i class="fab fa-linkedin" style="color: #f1c40f;"></i>
+  <a href="https://www.linkedin.com/company/association-of-computer-engineering-student-aces-avcoe/" target="_blank" style="color: #f1c40f; text-decoration: none;">LinkedIn</a>
+</div>
     </div>
 
     <div class="footer-copyright" style="margin-top: 30px; font-size: 0.85rem; color: #666;">
@@ -552,4 +557,5 @@ body {
     </script>
 </body>
 </html>
+
 
