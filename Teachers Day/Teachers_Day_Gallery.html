@@ -29,13 +29,16 @@
             pointer-events: none;
             z-index: -1;
         }
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* max 3 per row */
-    gap: 25px;
+.gallery-grid {
+    column-count: 3;
+    column-gap: 25px;
+    margin-bottom: 3rem;
 }
 
+
 .photo-item {
+    break-inside: avoid;
+    margin-bottom: 25px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 105, 180, 0.1));
     border-radius: 20px;
     overflow: hidden;
@@ -44,17 +47,16 @@
     border: 2px solid rgba(255, 255, 255, 0.2);
     transition: all 0.4s ease;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .photo-item img {
     width: 100%;
     height: auto;
+    object-fit: cover;
     display: block;
-    object-fit: contain;
+    transition: transform 0.4s ease;
 }
+
 
         .particle {
             position: absolute;
@@ -447,7 +449,6 @@
     <header class="header">
         <h1 class="title">🎉 Teacher's Day 2025 – Computer Department 🎊</h1>
         <p class="subtitle">"गुरुर ब्रह्मा गुरुर विष्णु गुरुर देवो महेश्वरः
-गुरुः साक्षात्परब्रह्मा
 गुरुः साक्षात्परब्रह्मा तस्मै श्री गुरुवे नमः"</p>
     </header>
 
@@ -725,5 +726,6 @@ document.addEventListener('DOMContentLoaded', () => {
 </body>
 
 </html>
+
 
 
