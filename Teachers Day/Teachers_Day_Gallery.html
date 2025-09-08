@@ -21,7 +21,7 @@
 
     .header {
       text-align: center;
-      padding: 3rem 1rem 4rem;
+      padding: 3rem 1rem 2rem;
       background: linear-gradient(135deg, rgba(255, 105, 180, 0.2), rgba(255, 215, 0, 0.2), rgba(138, 43, 226, 0.2));
       backdrop-filter: blur(15px);
       border-bottom: 2px solid rgba(255, 255, 255, 0.1);
@@ -52,34 +52,29 @@
       text-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
     }
 
-    /* ==== GALLERY FIX STARTS HERE ==== */
-
+    /* === FLEX GALLERY === */
     .gallery-grid {
-      column-count: 3;
-      column-gap: 25px;
-      padding: 0 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 0 1rem;
       margin-bottom: 3rem;
+      gap: 20px;
     }
 
     .photo-item {
-      break-inside: avoid;
-      margin-bottom: 25px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 105, 180, 0.1));
-      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 105, 180, 0.1));
+      border-radius: 15px;
       overflow: hidden;
-      cursor: pointer;
-      backdrop-filter: blur(15px);
       border: 2px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.4s ease;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      transition: all 0.4s ease;
     }
 
     .photo-item img {
       width: 100%;
       height: auto;
-      object-fit: cover;
       display: block;
-      transition: transform 0.4s ease;
     }
 
     .photo-item:hover {
@@ -88,12 +83,24 @@
       box-shadow: 0 15px 40px rgba(255, 105, 180, 0.4);
     }
 
-    .photo-item:hover img {
-      transform: scale(1.05);
+    /* Orientation-specific widths */
+    .photo-item.vertical {
+      flex: 1 1 calc(33% - 20px);
     }
 
-    /* ==== GALLERY FIX ENDS HERE ==== */
+    .photo-item.horizontal {
+      flex: 1 1 100%;
+    }
 
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .photo-item.vertical,
+      .photo-item.horizontal {
+        flex: 1 1 100%;
+      }
+    }
+
+    /* Footer */
     .footer {
       background: #2c3e50;
       color: white;
@@ -116,19 +123,11 @@
       backdrop-filter: blur(10px);
     }
 
-    /* Responsive for smaller screens */
-    @media (max-width: 992px) {
-      .gallery-grid {
-        column-count: 2;
+    @media (max-width: 768px) {
+      .footer-content {
+        grid-template-columns: 1fr;
       }
     }
-
-    @media (max-width: 600px) {
-      .gallery-grid {
-        column-count: 1;
-      }
-    }
-
   </style>
 </head>
 <body>
@@ -139,32 +138,19 @@
     <p class="subtitle">"गुरुर ब्रह्मा गुरुर विष्णु गुरुर देवो महेश्वरः<br/>गुरुः साक्षात् परब्रह्म तस्मै श्री गुरवे नमः"</p>
   </header>
 
-  <!-- Section Title -->
   <h3>Some Snaps From Teachers Day</h3>
 
-  <!-- Gallery -->
-  <div class="gallery-grid">
-    <div class="photo-item">
-      <img src="1.jpg" alt="Photo 1">
-    </div>
-    <div class="photo-item">
-      <img src="2.jpg" alt="Photo 2">
-    </div>
-    <div class="photo-item">
-      <img src="3.jpg" alt="Photo 3">
-    </div>
-    <div class="photo-item">
-      <img src="4.jpg" alt="Photo 4">
-    </div>
-    <div class="photo-item">
-      <img src="5.jpg" alt="Photo 5">
-    </div>
-    <div class="photo-item">
-      <img src="6.jpg" alt="Photo 6">
-    </div>
+  <!-- GALLERY -->
+  <div class="gallery-grid" id="gallery">
+    <div class="photo-item"><img src="2.png" alt="Photo 6"></div>
+    <div class="photo-item"><img src="1.jpg" alt="Photo 1"></div>
+    <div class="photo-item"><img src="2.jpg" alt="Photo 2"></div>
+    <div class="photo-item"><img src="3.jpg" alt="Photo 3"></div>
+    <div class="photo-item"><img src="4.jpg" alt="Photo 4"></div>
+    <div class="photo-item"><img src="5.jpg" alt="Photo 5"></div>
   </div>
 
-  <!-- Footer -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
       <div class="footer-content">
@@ -179,11 +165,35 @@
           <p>Association of Computer Engineering Students</p>
         </div>
       </div>
-      <div style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; margin-top: 20px;">
+      <div style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
         <p>&copy; 2025 Department of Computer Engineering | ACES | All Rights Reserved</p>
       </div>
     </div>
   </footer>
+
+  <!-- JavaScript to detect orientation -->
+  <script>
+    window.addEventListener('load', () => {
+      const items = document.querySelectorAll('.photo-item');
+      items.forEach(item => {
+        const img = item.querySelector('img');
+        if (img.complete) {
+          assignOrientation(item, img);
+        } else {
+          img.onload = () => assignOrientation(item, img);
+        }
+      });
+
+      function assignOrientation(item, img) {
+        const aspectRatio = img.naturalWidth / img.naturalHeight;
+        if (aspectRatio > 1.2) {
+          item.classList.add('horizontal');
+        } else {
+          item.classList.add('vertical');
+        }
+      }
+    });
+  </script>
 
 </body>
 </html>
